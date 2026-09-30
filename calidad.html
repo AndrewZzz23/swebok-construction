@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calidad del Software · Cuestionario</title>
+<meta name="description" content="Respuestas al cuestionario de calidad del software: garantía de calidad, SQA, revisiones técnicas formales, ISO 9001, ISO/IEC 9126, métricas y modelos de calidad.">
+<meta name="author" content="Andrés Zubieta">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='%23f5a524'%3E/%3E%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.className="js"</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top" style="color:inherit">SW<span>/</span>Calidad</a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menú</button>
+    <ul id="menu">
+      <li><a href="#conceptos">Conceptos</a></li>
+      <li><a href="#web">Calidad Web</a></li>
+      <li><a href="#sqa">SQA</a></li>
+      <li><a href="#iso">ISO</a></li>
+      <li><a href="#metricas">Métricas</a></li>
+      <li><a href="#modelos">Modelos</a></li>
+      <li><a href="#fuentes">Fuentes</a></li>
+      <li><a class="page" href="index.html">← SWEBOK</a></li>
+    </ul>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="tag">Cuestionario · Calidad del Software</span>
+    <h1>La calidad <em>no se prueba al final:</em> se construye.</h1>
+    <p>Respuestas a las 17 preguntas del cuestionario sobre calidad del software, a partir de la bibliografía de referencia (Pressman, Sommerville, normas ISO/IEC) y de búsqueda en la red.</p>
+    <div class="toc" aria-label="Ir a la pregunta">
+      <a href="#p1">1</a><a href="#p2">2</a><a href="#p3">3</a><a href="#p4">4</a><a href="#p5">5</a><a href="#p6">6</a><a href="#p7">7</a><a href="#p8">8</a><a href="#p9">9</a><a href="#p10">10</a><a href="#p11">11</a><a href="#p12">12</a><a href="#p13">13</a><a href="#p14">14</a><a href="#p15">15</a><a href="#p16">16</a><a href="#p17">17</a>
+    </div>
+  </div>
+</header>
+
+<!-- CONCEPTOS -->
+<section id="conceptos">
+  <div class="wrap">
+    <span class="kicker">01 · Conceptos básicos</span>
+    <h2>¿Qué entendemos por calidad?</h2>
+
+    <article class="qa reveal" id="p1">
+      <h3><span class="num">01</span>Diferencia entre calidad de diseño y calidad de concordancia</h3>
+      <p><b>Calidad de diseño</b> se refiere a las características que los diseñadores especifican para un producto: requisitos, especificaciones y diseño del sistema. Cuanto más exigentes son esas especificaciones (materiales, tolerancias, rendimiento), mayor es la calidad de diseño.</p>
+      <p><b>Calidad de concordancia</b> (o de conformidad) es el grado en que el producto construido cumple las especificaciones de diseño. En software se refiere sobre todo a la implementación: si el código hace lo que el diseño dice, la calidad de concordancia es alta.</p>
+      <div class="note">En resumen: la calidad de diseño se pregunta <i>"¿especificamos lo correcto?"</i> y la de concordancia <i>"¿construimos lo que especificamos?"</i>. Pressman lo resume así: satisfacción del usuario = producto que funciona + buena calidad + entrega a tiempo y dentro del presupuesto.</div>
+    </article>
+
+    <article class="qa reveal" id="p2">
+      <h3><span class="num">02</span>¿En qué consiste la garantía de calidad?</h3>
+      <p>La <b>garantía de calidad del software</b> (SQA, <i>Software Quality Assurance</i>) es un patrón de acciones planificado y sistemático para asegurar que el proceso y el producto cumplen los requisitos y estándares establecidos. Su función principal es de <b>auditoría e información</b>: le da a la dirección los datos necesarios para saber si la calidad del producto va por buen camino.</p>
+      <p>Abarca:</p>
+      <ul>
+        <li>Un enfoque de gestión de calidad.</li>
+        <li>Métodos y herramientas de ingeniería del software eficaces.</li>
+        <li>Revisiones técnicas formales a lo largo del proceso.</li>
+        <li>Una estrategia de pruebas en varios niveles.</li>
+        <li>Control de la documentación y de los cambios (gestión de configuración).</li>
+        <li>Procedimientos para cumplir los estándares.</li>
+        <li>Mecanismos de medición y de generación de informes.</li>
+      </ul>
+    </article>
+
+    <article class="qa reveal" id="p3">
+      <h3><span class="num">03</span>¿Cuál es la base de las medidas de la calidad del software?</h3>
+      <p>Según Pressman, <b>los requisitos del software son la base de las medidas de la calidad</b>: la falta de concordancia con los requisitos es una falta de calidad. Se suman otros dos puntos:</p>
+      <ol>
+        <li><b>Los estándares especificados</b> definen criterios de desarrollo que guían la forma de construir el software. Si no se siguen, casi siempre habrá falta de calidad.</li>
+        <li><b>Los requisitos implícitos</b>, los que nadie menciona pero todos esperan (por ejemplo, facilidad de mantenimiento). Si el software cumple los requisitos explícitos pero no los implícitos, su calidad queda en duda.</li>
+      </ol>
+    </article>
+  </div>
+</section>
+
+<!-- CALIDAD WEB -->
+<section id="web">
+  <div class="wrap">
+    <span class="kicker">02 · Calidad en la Web</span>
+    <h2>WebApps: usables, accesibles y confiables</h2>
+
+    <article class="qa reveal" id="p4">
+      <h3><span class="num">04</span>Principales atributos de calidad del software IWeb</h3>
+      <p>Pressman retoma el árbol de requisitos de calidad de Olsina y colaboradores para las aplicaciones Web (IWeb):</p>
+      <div class="tbl">
+      <table>
+        <thead><tr><th scope="col">Atributo</th><th scope="col">Qué incluye</th></tr></thead>
+        <tbody>
+          <tr><td>Usabilidad</td><td>Comprensibilidad global del sitio, ayuda y retroalimentación en línea, estética de la interfaz y características especiales.</td></tr>
+          <tr><td>Funcionalidad</td><td>Capacidad de búsqueda y recuperación, navegación y exploración, características relacionadas con el dominio de la aplicación.</td></tr>
+          <tr><td>Confiabilidad</td><td>Procesamiento correcto de enlaces, recuperación de errores, validación y recuperación de las entradas del usuario.</td></tr>
+          <tr><td>Eficiencia</td><td>Tiempo de respuesta, velocidad de generación de páginas y de gráficos.</td></tr>
+          <tr><td>Facilidad de mantenimiento</td><td>Facilidad de corrección, adaptabilidad y extensibilidad.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Offutt añade atributos propios de la Web: <b>seguridad</b>, <b>disponibilidad</b>, <b>escalabilidad</b> y <b>tiempo de salida al mercado</b>.</p>
+    </article>
+
+    <article class="qa reveal" id="p5">
+      <h3><span class="num">05</span>Diferencia entre usabilidad y accesibilidad</h3>
+      <p><b>Usabilidad</b> (ISO 9241-11): grado en que un producto puede ser usado por usuarios específicos para lograr objetivos concretos con <b>eficacia, eficiencia y satisfacción</b> en un contexto de uso determinado. Responde a <i>"¿qué tan fácil y agradable es usarlo?"</i>.</p>
+      <p><b>Accesibilidad</b>: posibilidad de que <b>todas las personas</b>, incluidas las que tienen alguna discapacidad (visual, auditiva, motriz o cognitiva), puedan percibir, entender, navegar e interactuar con el sitio. Su referencia internacional son las pautas <b>WCAG</b> del W3C (principios: perceptible, operable, comprensible y robusto). Responde a <i>"¿puede usarlo cualquier persona?"</i>.</p>
+      <div class="note">Un sitio puede ser muy usable para la mayoría y aun así ser inaccesible, por ejemplo con imágenes sin texto alternativo o sin navegación por teclado. En Colombia, la <b>Ley 1618 de 2013</b> y la <b>Resolución 1519 de 2020 del MinTIC</b> exigen que los sitios de las entidades públicas cumplan criterios de accesibilidad basados en WCAG 2.1 (nivel AA).</div>
+    </article>
+
+    <article class="qa reveal" id="p6">
+      <h3><span class="num">06</span>Ranking de WebApps colombianas con mayor calidad de diseño</h3>
+      <p>En Colombia no existe un ranking oficial único de "calidad de diseño" web. Las dos referencias más útiles que encontré en la red son:</p>
+      <ul>
+        <li><b>Índice de Gobierno Digital (IGD) del MinTIC</b>: mide cada año los portales y servicios digitales de las entidades públicas (incluye usabilidad, accesibilidad y seguridad). En la medición de 2024 lo encabezaron:
+          <div class="tbl">
+          <table>
+            <thead><tr><th scope="col">Nivel</th><th scope="col">Primeros lugares (puntaje)</th></tr></thead>
+            <tbody>
+              <tr><td>Entidades nacionales</td><td>1. Ministerio de Salud y Protección Social (97,19) · 2. SATENA (96,36) · 3. Ministerio de Educación Nacional (95,96)</td></tr>
+              <tr><td>Gobernaciones</td><td>1. Bolívar (92,75) · 2. Valle del Cauca (92,54) · 3. Meta (92,13)</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </li>
+        <li><b>Awwwards – sitios de Colombia</b>: galería internacional que premia sitios por diseño, usabilidad, creatividad y contenido, y se puede filtrar por país. Allí aparecen los sitios colombianos premiados como <i>Site of the Day</i> o con mención honorífica, en su mayoría hechos por estudios y agencias creativas.</li>
+      </ul>
+      <div class="note">El IGD 2024 dio en promedio 81,9 puntos a las entidades nacionales y 59,9 a las territoriales, así que hay una brecha grande entre el nivel nacional y los municipios.</div>
+    </article>
+  </div>
+</section>
+
+<!-- SQA -->
+<section id="sqa">
+  <div class="wrap">
+    <span class="kicker">03 · Garantía de calidad en la práctica</span>
+    <h2>Actividades SQA y revisiones</h2>
+
+    <article class="qa reveal" id="p7">
+      <h3><span class="num">07</span>¿Cuáles son las actividades de SQA?</h3>
+      <p>El Software Engineering Institute (SEI) recomienda que el grupo de SQA realice estas actividades:</p>
+      <ol>
+        <li><b>Establecer un plan de SQA</b> para el proyecto: evaluaciones, auditorías y revisiones a realizar, estándares aplicables, procedimientos de informe de errores, documentos a producir y retroalimentación al equipo.</li>
+        <li><b>Participar en la descripción del proceso</b> de software del proyecto, verificando que cumpla la política de la organización y los estándares.</li>
+        <li><b>Revisar las actividades de ingeniería del software</b> para comprobar que se ajustan al proceso definido.</li>
+        <li><b>Auditar los productos de software</b> designados para verificar que se ajustan a lo definido en el proceso.</li>
+        <li><b>Asegurar que las desviaciones</b> en el trabajo y en los productos se documenten y se manejen según un procedimiento establecido.</li>
+        <li><b>Registrar lo que no se ajuste</b> a los requisitos e informar a la dirección, haciendo seguimiento hasta que se resuelva.</li>
+      </ol>
+    </article>
+
+    <article class="qa reveal" id="p8">
+      <h3><span class="num">08</span>¿Qué es una revisión técnica formal (RTF)?</h3>
+      <p>Es una actividad de garantía de calidad que realizan los propios ingenieros de software. Sus objetivos son:</p>
+      <ul>
+        <li>Descubrir errores en la función, la lógica o la implementación.</li>
+        <li>Verificar que el software cumple sus requisitos.</li>
+        <li>Garantizar que se ha representado según estándares predefinidos.</li>
+        <li>Conseguir un desarrollo uniforme y proyectos más manejables.</li>
+        <li>Servir de capacitación a los ingenieros más nuevos.</li>
+      </ul>
+      <p><b>¿Cómo se hace?</b> Es una reunión de <b>3 a 5 personas</b>, con una preparación previa de no más de <b>2 horas</b> por persona y una duración inferior a <b>2 horas</b>. Participan el <b>productor</b> (autor del producto), el <b>jefe de revisión</b>, los <b>revisores</b> y un <b>registrador</b>. Al final se decide <b>aceptar</b> el producto, <b>rechazarlo</b> o <b>aceptarlo provisionalmente</b>, y se genera un informe con la lista de problemas encontrados.</p>
+      <div class="note">Regla de oro: se revisa el <b>producto</b>, no al productor. Hay que limitar el debate y no intentar resolver cada problema durante la reunión.</div>
+    </article>
+  </div>
+</section>
+
+<!-- ISO -->
+<section id="iso">
+  <div class="wrap">
+    <span class="kicker">04 · Normas y certificación</span>
+    <h2>ISO y la certificación de calidad</h2>
+
+    <article class="qa reveal" id="p9">
+      <h3><span class="num">09</span>Estándar de garantía de calidad ISO aplicado a la ingeniería del software</h3>
+      <p>Es la norma <b>ISO 9001</b> (versión vigente: ISO 9001:2015), que define los requisitos de un sistema de gestión de calidad para organizaciones que diseñan, desarrollan, producen o prestan servicios. Como está escrita en términos generales, existe una guía para aplicarla al software: antes la <b>ISO 9000-3</b> y hoy la <b>ISO/IEC/IEEE 90003:2018</b>.</p>
+    </article>
+
+    <article class="qa reveal" id="p10">
+      <h3><span class="num">10</span>Atributos de calidad de la norma ISO/IEC 9126</h3>
+      <p>La ISO/IEC 9126 define <b>seis características</b> de calidad, cada una con subcaracterísticas:</p>
+      <div class="tbl">
+      <table>
+        <thead><tr><th scope="col">Característica</th><th scope="col">Subcaracterísticas</th></tr></thead>
+        <tbody>
+          <tr><td>Funcionalidad</td><td>Adecuación, exactitud, interoperabilidad, seguridad, cumplimiento.</td></tr>
+          <tr><td>Fiabilidad</td><td>Madurez, tolerancia a fallos, capacidad de recuperación.</td></tr>
+          <tr><td>Usabilidad</td><td>Facilidad de comprensión, de aprendizaje y de operación; atractivo.</td></tr>
+          <tr><td>Eficiencia</td><td>Comportamiento en el tiempo, utilización de recursos.</td></tr>
+          <tr><td>Mantenibilidad</td><td>Facilidad de análisis, de cambio, estabilidad, facilidad de prueba.</td></tr>
+          <tr><td>Portabilidad</td><td>Adaptabilidad, facilidad de instalación, coexistencia, facilidad de reemplazo.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note">La ISO/IEC 9126 fue reemplazada por la familia <b>ISO/IEC 25000 (SQuaRE)</b>. Su modelo de producto, la <b>ISO/IEC 25010</b>, agrega <b>seguridad</b> y <b>compatibilidad</b> como características propias (y en la versión de 2023 también <b>protección/safety</b>).</div>
+    </article>
+
+    <article class="qa reveal" id="p11">
+      <h3><span class="num">11</span>Empresas certificadoras y empresas certificadas en Colombia</h3>
+      <p><b>Certificadoras / evaluadoras:</b></p>
+      <ul>
+        <li><b>ICONTEC</b>: organismo nacional de normalización y certificación. Certifica ISO 9001, ISO/IEC 27001, entre otras.</li>
+        <li><b>Bureau Veritas</b> y <b>SGS</b>: certificadoras internacionales con presencia en Colombia.</li>
+        <li><b>CMMI Institute (ISACA)</b>: no "certifica", sino que <b>evalúa</b> (<i>appraisal</i>) el nivel de madurez CMMI a través de evaluadores autorizados.</li>
+      </ul>
+      <p><b>Empresas colombianas con certificación o evaluación de calidad:</b></p>
+      <ul>
+        <li><b>Heinsohn</b>: primera empresa de Colombia valorada en <b>CMMI nivel 5 en la versión 2.0</b> del modelo.</li>
+        <li><b>Minsait (Grupo Indra)</b>: renovó en 2025 su <b>CMMI nivel 5</b> para desarrollo y servicios, incluidas sus operaciones en Colombia.</li>
+      </ul>
+      <p><b>¿Y en el Tolima?</b> En las fuentes públicas que consulté <b>no encontré una empresa tolimense de desarrollo de software</b> con certificación ISO 9001 o evaluación CMMI publicada. Sí hay organizaciones del Tolima certificadas por ICONTEC en ISO 9001, como la <b>Alcaldía de Ibagué</b> (ISO 9001, 14001 y 45001) y <b>Comfenalco Tolima</b> (ISO 9001:2015), pero no son empresas de software.</p>
+    </article>
+
+    <article class="qa reveal" id="p12">
+      <h3><span class="num">12</span>Requisitos ISO de un sistema de garantía de calidad efectivo</h3>
+      <p>Pressman enumera los <b>20 requisitos</b> que la ISO 9001 exige en un sistema de garantía de calidad efectivo:</p>
+      <div class="chips">
+        <span class="chip">Responsabilidad de la gestión</span>
+        <span class="chip">Sistema de calidad</span>
+        <span class="chip">Revisión del contrato</span>
+        <span class="chip">Control del diseño</span>
+        <span class="chip">Control de documentos y datos</span>
+        <span class="chip">Compras</span>
+        <span class="chip">Producto suministrado por el cliente</span>
+        <span class="chip">Identificación y trazabilidad</span>
+        <span class="chip">Control del proceso</span>
+        <span class="chip">Inspección y prueba</span>
+        <span class="chip">Equipos de inspección, medición y prueba</span>
+        <span class="chip">Estado de inspección y prueba</span>
+        <span class="chip">Producto no conforme</span>
+        <span class="chip">Acción correctiva y preventiva</span>
+        <span class="chip">Manipulación, almacenamiento, embalaje y entrega</span>
+        <span class="chip">Registros de calidad</span>
+        <span class="chip">Auditorías internas de calidad</span>
+        <span class="chip">Formación</span>
+        <span class="chip">Servicio posventa</span>
+        <span class="chip">Técnicas estadísticas</span>
+      </div>
+      <div class="note">La versión actual, ISO 9001:2015, reorganiza estos requisitos en siete cláusulas: <b>contexto de la organización, liderazgo, planificación, apoyo, operación, evaluación del desempeño y mejora</b>, siguiendo el ciclo PHVA (planear, hacer, verificar, actuar).</div>
+    </article>
+  </div>
+</section>
+
+<!-- METRICAS -->
+<section id="metricas">
+  <div class="wrap">
+    <span class="kicker">05 · Métricas</span>
+    <h2>Medir para mejorar</h2>
+
+    <article class="qa reveal" id="p13">
+      <h3><span class="num">13</span>Métricas de calidad: predicción vs. control</h3>
+      <p>Las <b>métricas de calidad del software</b> son medidas cuantitativas que permiten evaluar, en forma objetiva, el grado en que un proceso o un producto tiene un atributo de calidad (fiabilidad, mantenibilidad, usabilidad…). Ejemplos: densidad de defectos, eficacia en la eliminación de defectos (DRE) y tiempo medio entre fallos (MTBF).</p>
+      <div class="tbl">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Métricas de predicción</th><th scope="col">Métricas de control</th></tr></thead>
+        <tbody>
+          <tr><td>Se aplican a</td><td>El <b>producto</b></td><td>El <b>proceso</b></td></tr>
+          <tr><td>Propósito</td><td>Estimar atributos que aún no se pueden medir directamente (p. ej. la mantenibilidad futura).</td><td>Apoyar a la gestión para controlar y ajustar el proceso mientras ocurre.</td></tr>
+          <tr><td>Ejemplos</td><td>Complejidad ciclomática, tamaño del código, longitud de identificadores, profundidad de anidamiento.</td><td>Esfuerzo y tiempo por actividad, número de defectos encontrados y corregidos, avance frente al plan.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>(Clasificación de Sommerville.)</p>
+    </article>
+
+    <article class="qa reveal" id="p14">
+      <h3><span class="num">14</span>Métricas orientadas a objetos</h3>
+      <p><b>Suite CK (Chidamber y Kemerer)</b>, la más utilizada:</p>
+      <ul>
+        <li><b>WMC</b>: métodos ponderados por clase.</li>
+        <li><b>DIT</b>: profundidad del árbol de herencia.</li>
+        <li><b>NOC</b>: número de hijos (subclases directas).</li>
+        <li><b>CBO</b>: acoplamiento entre objetos.</li>
+        <li><b>RFC</b>: respuesta de una clase.</li>
+        <li><b>LCOM</b>: falta de cohesión en los métodos.</li>
+      </ul>
+      <p><b>Métricas MOOD</b> (Brito e Abreu): factor de ocultamiento de métodos (MHF) y de atributos (AHF), factor de herencia de métodos (MIF) y de atributos (AIF), factor de polimorfismo (PF) y factor de acoplamiento (CF).</p>
+      <p><b>Lorenz y Kidd</b>: tamaño de la clase (TC), número de operaciones redefinidas (NOR) y añadidas (NOA) por una subclase, índice de especialización (IE).</p>
+    </article>
+
+    <article class="qa reveal" id="p15">
+      <h3><span class="num">15</span>¿Existen métricas de calidad para aplicaciones móviles?</h3>
+      <p><b>Sí.</b> Se usan los modelos generales (ISO/IEC 25010) adaptados al contexto móvil, junto con métricas propias:</p>
+      <ul>
+        <li><b>Estabilidad</b>: tasa de fallos (<i>crash rate</i>) y de bloqueos, que Google Play mide como <i>Android vitals</i> (fallos percibidos por el usuario y errores ANR, "la aplicación no responde").</li>
+        <li><b>Rendimiento</b>: tiempo de arranque, fluidez (fotogramas lentos), consumo de batería, memoria y datos móviles, tamaño del instalador.</li>
+        <li><b>Experiencia del usuario</b>: calificación y reseñas en las tiendas, retención y tasa de desinstalación. La escala académica <b>MARS</b> (<i>Mobile App Rating Scale</i>) evalúa compromiso, funcionalidad, estética e información.</li>
+        <li><b>Seguridad</b>: el estándar <b>OWASP MASVS</b> define requisitos verificables de seguridad para apps móviles.</li>
+      </ul>
+    </article>
+
+    <article class="qa reveal" id="p16">
+      <h3><span class="num">16</span>¿Cuál es la técnica más utilizada para valorar la calidad?</h3>
+      <p>Según Pressman, la <b>revisión técnica formal</b> (y su forma más rigurosa, la <b>inspección</b>) es el <b>filtro más eficaz</b> desde el punto de vista de la garantía de calidad. Permite detectar errores en etapas tempranas, cuando corregirlos cuesta mucho menos que después de la entrega.</p>
+      <p>En la práctica se complementa con las <b>pruebas del software</b>, la técnica de verificación más extendida en la industria, y con el <b>análisis estático</b> automatizado.</p>
+    </article>
+  </div>
+</section>
+
+<!-- MODELOS -->
+<section id="modelos">
+  <div class="wrap">
+    <span class="kicker">06 · Modelos y estándares</span>
+    <h2>Calidad de proceso y de producto</h2>
+
+    <article class="qa reveal" id="p17">
+      <h3><span class="num">17</span>Principales modelos y estándares de calidad</h3>
+      <div class="tbl">
+      <table>
+        <thead><tr><th scope="col">Nivel</th><th scope="col">Modelo / estándar</th><th scope="col">Idea principal</th></tr></thead>
+        <tbody>
+          <tr><td>Proceso</td><td>ISO 9001 + ISO/IEC 90003</td><td>Sistema de gestión de calidad aplicado al software.</td></tr>
+          <tr><td>Proceso</td><td>CMMI</td><td>Cinco niveles de madurez: inicial, gestionado, definido, gestionado cuantitativamente y en optimización.</td></tr>
+          <tr><td>Proceso</td><td>ISO/IEC 15504 (SPICE) → ISO/IEC 33000</td><td>Evaluación de la capacidad de los procesos.</td></tr>
+          <tr><td>Proceso</td><td>ISO/IEC/IEEE 12207</td><td>Procesos del ciclo de vida del software.</td></tr>
+          <tr><td>Proceso</td><td>PSP / TSP</td><td>Proceso personal y de equipo del SEI (disciplina individual y en equipo).</td></tr>
+          <tr><td>Proceso</td><td>MoProSoft / Competisoft</td><td>Modelos latinoamericanos pensados para pequeñas empresas de software.</td></tr>
+          <tr><td>Proceso</td><td>ISO/IEC 29110</td><td>Perfiles de ciclo de vida para entidades muy pequeñas (hasta 25 personas).</td></tr>
+          <tr><td>Producto</td><td>McCall (1977)</td><td>Factores agrupados en operación, revisión y transición del producto.</td></tr>
+          <tr><td>Producto</td><td>Boehm (1978)</td><td>Modelo jerárquico: utilidad, mantenibilidad y portabilidad.</td></tr>
+          <tr><td>Producto</td><td>FURPS (HP)</td><td>Funcionalidad, usabilidad, confiabilidad, rendimiento y soporte.</td></tr>
+          <tr><td>Producto</td><td>ISO/IEC 9126</td><td>Seis características de calidad (ver pregunta 10).</td></tr>
+          <tr><td>Producto</td><td>ISO/IEC 25000 (SQuaRE) · 25010</td><td>Sucesor de la 9126 y de la 14598: modelo de calidad del producto y de calidad en uso.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- FUENTES -->
+<section id="fuentes">
+  <div class="wrap">
+    <span class="kicker">07 · Referencias</span>
+    <h2>Fuentes consultadas</h2>
+    <ol class="refs">
+      <li>Pressman, R. S. <i>Ingeniería del Software: un enfoque práctico</i>. McGraw-Hill (cap. de gestión de calidad, garantía de calidad y revisiones técnicas).</li>
+      <li>Sommerville, I. <i>Ingeniería de Software</i>. Pearson (cap. de gestión de la calidad y métricas).</li>
+      <li>ISO 9001:2015 · ISO/IEC/IEEE 90003:2018 · ISO/IEC 9126 · ISO/IEC 25010.</li>
+      <li>W3C. <a href="https://www.w3.org/WAI/standards-guidelines/wcag/es" target="_blank" rel="noopener">Pautas de Accesibilidad para el Contenido Web (WCAG)</a>.</li>
+      <li>MinTIC. <a href="https://gobiernodigital.mintic.gov.co/692/w3-article-418735.html" target="_blank" rel="noopener">Resultados del Índice de Gobierno Digital 2024</a>.</li>
+      <li>Awwwards. <a href="https://www.awwwards.com/websites/Colombia/" target="_blank" rel="noopener">Sitios web de Colombia</a>.</li>
+      <li>La República. <a href="https://www.larepublica.co/empresas/la-colombiana-heinsohn-alcanzo-mayor-nivel-de-calidad-del-modelo-cmmi-3111200" target="_blank" rel="noopener">La colombiana Heinsohn alcanzó el mayor nivel de calidad del modelo CMMI</a>.</li>
+      <li>La Ecuación Digital. <a href="https://www.laecuaciondigital.com/actualidad/minsait-certificada-en-cmmi-nivel-5-excelencia-en-cinco-paises/" target="_blank" rel="noopener">Minsait certificada en CMMI Nivel 5 en cinco países</a>.</li>
+      <li>Alerta Tolima. <a href="https://www.alertatolima.com/noticias/tolima/ibague/alcaldia-de-ibague-conserva-certificaciones-internacionales-tras-auditoria-de-icontec" target="_blank" rel="noopener">Alcaldía de Ibagué conserva certificaciones tras auditoría de ICONTEC</a>.</li>
+      <li>Comfenalco Tolima. <a href="https://www.comfenalco.com.co/icontec-renovo-las-certificaciones-a-comfenalco-tolima/" target="_blank" rel="noopener">ICONTEC renovó las certificaciones a Comfenalco Tolima</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Cuestionario de Calidad del Software.<br>Hecho por Andrés Zubieta · Ingeniería de Sistemas · Universidad del Tolima.</span>
+    <a href="index.html">← Volver a Software Construction</a>
+  </div>
+</footer>
+
+<a class="to-top" href="#top" aria-label="Volver arriba">↑</a>
+<script src="main.js"></script>
+</body>
+</html>
