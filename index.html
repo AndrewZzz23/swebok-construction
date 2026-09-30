@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Software Construction · SWEBOK</title>
 <meta name="description" content="Main ideas of the Software Construction Knowledge Area from the SWEBOK Guide.">
+<meta name="author" content="Andrés Zubieta">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='%23f5a524'%3E/%3E%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.className="js"</script>
 <style>
 :root{
   --bg:#0d1117; --bg2:#141b24; --card:#18212d; --line:#263243;
@@ -27,8 +31,19 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .logo{font-family:"Space Grotesk";font-weight:700;letter-spacing:.5px}
 .logo span{color:var(--accent)}
 nav ul{display:flex;gap:22px;list-style:none;font-size:14px}
-nav ul a{color:var(--muted)} nav ul a:hover{color:var(--text)}
-@media(max-width:820px){nav ul{display:none}}
+nav ul a{color:var(--muted);transition:color .2s} nav ul a:hover,nav ul a.active{color:var(--text)}
+nav ul a.active{box-shadow:0 2px 0 var(--accent)}
+.menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+@media(max-width:820px){
+  .menu-btn{display:block}
+  nav ul{display:none;position:absolute;top:60px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0}
+  nav ul.open{display:flex}
+  nav ul a{display:block;padding:12px 20px}
+  nav ul a.active{box-shadow:inset 3px 0 0 var(--accent)}
+}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--accent)}
+:focus-visible{outline:2px solid var(--accent2);outline-offset:3px;border-radius:4px}
+section{scroll-margin-top:60px}
 
 /* hero */
 .hero{padding:110px 0 90px;position:relative;overflow:hidden}
@@ -85,41 +100,71 @@ pre{background:#0a0e14;border:1px solid var(--line);border-radius:var(--radius);
 table{width:100%;border-collapse:collapse;margin-top:34px;font-size:15.5px}
 th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-family:"Space Grotesk";color:var(--accent)}
-td:first-child{font-weight:600;white-space:nowrap}
+td:first-child{font-weight:600}
+@media(min-width:700px){td:first-child{white-space:nowrap}}
 td{color:var(--muted)} td:first-child{color:var(--text)}
 .tbl{overflow-x:auto}
 
-/* team */
-.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px}
-.member{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;text-align:center}
-.avatar{width:72px;height:72px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;font-family:"Space Grotesk";font-weight:700;font-size:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111}
-.member small{color:var(--muted)}
+/* author */
+.author{display:flex;gap:24px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-top:36px;max-width:720px}
+.avatar{flex:none;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-family:"Space Grotesk";font-weight:700;font-size:28px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111}
+.author>div:last-child{flex:1;min-width:220px}
+.author h3{font-size:24px}
+.author small{color:var(--accent2);font-family:"JetBrains Mono";font-size:13px}
+.author p{color:var(--muted);font-size:15.5px;margin-top:8px}
+.author a{display:inline-block;margin-top:10px;font-size:14.5px}
+
+/* quiz */
+.quiz{display:grid;gap:18px;margin-top:40px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.q h3{font-size:18px;margin-bottom:14px}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 14px;font:inherit;font-size:15px;cursor:pointer;transition:border-color .2s}
+.opts button:hover:not(:disabled){border-color:var(--accent2)}
+.opts button:disabled{cursor:default}
+.opts button.ok{border-color:#3fb950;background:rgba(63,185,80,.12)}
+.opts button.bad{border-color:#f85149;background:rgba(248,81,73,.12)}
+.why{display:none;color:var(--muted);font-size:14.5px;margin-top:12px}
+.q.done .why{display:block}
+.score{margin-top:24px;font-family:"Space Grotesk";font-size:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.score button{background:none;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 16px;font:inherit;font-size:14px;cursor:pointer}
+
+.to-top{position:fixed;right:20px;bottom:20px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:700;opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+.to-top.show{opacity:1;pointer-events:auto}
 
 footer{padding:40px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
-.reveal{opacity:0;transform:translateY(20px);transition:.6s ease}
-.reveal.on{opacity:1;transform:none}
+.js .reveal{opacity:0;transform:translateY(20px);transition:.6s ease}
+.js .reveal.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .reveal{opacity:1;transform:none;transition:none}
+  .card,.card:hover{transition:none;transform:none}
+}
 </style>
 </head>
 <body>
 
 <nav>
   <div class="wrap">
-    <div class="logo">SW<span>/</span>Construction</div>
-    <ul>
+    <a class="logo" href="#top" style="color:inherit">SW<span>/</span>Construction</a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <ul id="menu">
       <li><a href="#what">Definition</a></li>
       <li><a href="#fundamentals">Fundamentals</a></li>
       <li><a href="#managing">Managing</a></li>
       <li><a href="#practice">Practice</a></li>
       <li><a href="#tech">Technologies</a></li>
       <li><a href="#tools">Tools</a></li>
-      <li><a href="#team">Team</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#author">Author</a></li>
     </ul>
   </div>
+  <div class="progress" aria-hidden="true"></div>
 </nav>
 
-<header class="hero">
+<header class="hero" id="top">
   <div class="wrap">
     <span class="tag">SWEBOK Guide · Knowledge Area: Software Construction</span>
     <h1>Where design becomes <em>working software.</em></h1>
@@ -190,7 +235,8 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     <p class="lead">Construction is driven by practical considerations. These are the main activities a developer performs.</p>
     <div class="tbl reveal">
     <table>
-      <tr><th>Topic</th><th>Main idea</th></tr>
+      <thead><tr><th scope="col">Topic</th><th scope="col">Main idea</th></tr></thead>
+      <tbody>
       <tr><td>Construction design</td><td>Some design work always happens during construction, at a smaller scale (classes, functions, algorithms).</td></tr>
       <tr><td>Construction languages</td><td>Any form of communication used to specify an executable solution: configuration languages, toolkit languages, scripting languages and programming languages. Visual and low-code / no-code platforms are also included.</td></tr>
       <tr><td>Coding</td><td>Techniques for understandable code: good naming, logical structure, error handling, resource management, security considerations and documentation.</td></tr>
@@ -199,6 +245,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
       <tr><td>Construction quality</td><td>Unit testing, test-first development, assertions, debugging, inspections, technical reviews and static analysis.</td></tr>
       <tr><td>Integration</td><td>Combining separately built components into a working system — preferably incrementally, as in continuous integration.</td></tr>
       <tr><td>Cross-platform &amp; migration</td><td>Building software that runs on different platforms and moving existing (legacy) systems to new technologies.</td></tr>
+      </tbody>
     </table>
     </div>
   </div>
@@ -287,30 +334,99 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
   </div>
 </section>
 
-<!-- TEAM -->
-<section id="team">
+<!-- QUIZ -->
+<section id="quiz">
   <div class="wrap">
-    <span class="kicker">08 · Team</span>
+    <span class="kicker">08 · Self-check</span>
+    <h2>Test what you learned</h2>
+    <p class="lead">Five quick questions about the chapter. Pick an answer to see if you got it right.</p>
+    <div class="quiz" id="quizList"></div>
+    <div class="score" aria-live="polite"><span id="scoreText">Score: 0 / 5</span><button id="resetQuiz" type="button">Try again</button></div>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<section id="author">
+  <div class="wrap">
+    <span class="kicker">09 · Author</span>
     <h2>Who made this</h2>
-    <p class="lead">Systems Engineering · Universidad del Tolima</p>
-    <div class="team">
-      <div class="member reveal"><div class="avatar">AZ</div><h3>Andrés Zubieta</h3><small>Team member</small></div>
-      <div class="member reveal"><div class="avatar">??</div><h3>Member 2</h3><small>Team member</small></div>
-      <div class="member reveal"><div class="avatar">??</div><h3>Member 3</h3><small>Team member</small></div>
+    <div class="author reveal">
+      <div class="avatar" aria-hidden="true">AZ</div>
+      <div>
+        <h3>Andrés Zubieta</h3>
+        <small>Systems Engineering · Universidad del Tolima</small>
+        <p>Research, writing, design and development of this page were done individually as a university assignment.</p>
+        <a href="https://github.com/AndrewZzz23" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span>Source: IEEE Computer Society, <i>Guide to the Software Engineering Body of Knowledge (SWEBOK)</i>, Software Construction Knowledge Area.</span>
+    <span>Source: IEEE Computer Society, <i>Guide to the Software Engineering Body of Knowledge (SWEBOK)</i>, Software Construction Knowledge Area.<br>Made by Andrés Zubieta · Universidad del Tolima.</span>
     <a href="https://www.computer.org/education/bodies-of-knowledge/software-engineering" target="_blank" rel="noopener">SWEBOK official site ↗</a>
   </div>
 </footer>
 
+<a class="to-top" href="#top" aria-label="Back to top">↑</a>
+
 <script>
+// Reveal on scroll
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Mobile menu
+const menuBtn=document.querySelector('.menu-btn'), menu=document.getElementById('menu');
+menuBtn.addEventListener('click',()=>{const open=menu.classList.toggle('open');menuBtn.setAttribute('aria-expanded',open)});
+menu.addEventListener('click',e=>{if(e.target.tagName==='A'){menu.classList.remove('open');menuBtn.setAttribute('aria-expanded',false)}});
+
+// Active nav link
+const links=[...menu.querySelectorAll('a')];
+const spy=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting) links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));
+}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>spy.observe(s));
+
+// Reading progress + back to top
+const bar=document.querySelector('.progress'), toTop=document.querySelector('.to-top');
+addEventListener('scroll',()=>{
+  const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+  bar.style.width=(max>0?h.scrollTop/max*100:0)+'%';
+  toTop.classList.toggle('show',h.scrollTop>600);
+},{passive:true});
+
+// Quiz
+const questions=[
+  {q:'Which principle is described as the central goal of software construction?',o:['Maximizing performance','Minimizing complexity','Writing as much code as possible','Avoiding all testing'],a:1,w:'People can only hold limited complexity in mind, so readable, simple code is the core goal.'},
+  {q:'What is the difference between construction FOR reuse and construction WITH reuse?',o:['There is no difference','FOR reuse creates reusable assets; WITH reuse integrates existing ones','FOR reuse only applies to databases','WITH reuse means copying code without testing'],a:1,w:'Construction for reuse produces assets others can use; construction with reuse selects and integrates existing ones.'},
+  {q:'In agile and iterative life cycles, construction…',o:['Starts only after all design is finished','Overlaps with design and testing in short cycles','Is done by a separate team at the end','Is not necessary'],a:1,w:'In iterative models, design, construction and testing repeat and overlap in each cycle.'},
+  {q:'Which of these is a technique for constructing for verification?',o:['Using obscure language tricks','Skipping code reviews','Writing unit tests and following coding standards','Removing error handling'],a:2,w:'Standards, reviews and unit tests make faults easier to find.'},
+  {q:'Which technologies were added or expanded in SWEBOK V4?',o:['Punch cards and mainframes','Low-code / no-code and visual programming','Only assembly language','None, the chapter did not change'],a:1,w:'V4 added topics such as feedback loops, visual programming and low-code / no-code.'}
+];
+const list=document.getElementById('quizList'), scoreText=document.getElementById('scoreText');
+let score=0;
+function renderQuiz(){
+  score=0; scoreText.textContent='Score: 0 / '+questions.length; list.innerHTML='';
+  questions.forEach((item,i)=>{
+    const box=document.createElement('div'); box.className='q';
+    box.innerHTML='<h3>'+(i+1)+'. '+item.q+'</h3><div class="opts"></div><p class="why">'+item.w+'</p>';
+    const opts=box.querySelector('.opts');
+    item.o.forEach((text,j)=>{
+      const b=document.createElement('button'); b.type='button'; b.textContent=text;
+      b.addEventListener('click',()=>{
+        opts.querySelectorAll('button').forEach((x,k)=>{x.disabled=true;if(k===item.a)x.classList.add('ok')});
+        if(j===item.a) score++; else b.classList.add('bad');
+        box.classList.add('done');
+        scoreText.textContent='Score: '+score+' / '+questions.length;
+      });
+      opts.appendChild(b);
+    });
+    list.appendChild(box);
+  });
+}
+document.getElementById('resetQuiz').addEventListener('click',renderQuiz);
+renderQuiz();
 </script>
 </body>
 </html>
