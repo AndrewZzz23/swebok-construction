@@ -1,0 +1,51 @@
+# Compila la app "Mis tareas" (carpeta flutter-app/) a web y la publica en flutter/app/
+# para que GitHub Pages la sirva en /swebok-construction/flutter/app/.
+name: Build Flutter web app
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'flutter-app/**'
+      - '.github/workflows/flutter-web.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: flutter-web
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Completar el proyecto y compilar para web
+        working-directory: flutter-app
+        run: |
+          flutter create --project-name mis_tareas --platforms web .
+          flutter pub get
+          flutter build web --release --base-href /swebok-construction/flutter/app/
+
+      - name: Copiar el build al sitio
+        run: |
+          rm -rf flutter/app
+          mkdir -p flutter
+          cp -r flutter-app/build/web flutter/app
+
+      - name: Publicar en main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flutter/app
+          git diff --cached --quiet && exit 0
+          git commit -m "Publicar build web de Mis tareas"
+          git push
