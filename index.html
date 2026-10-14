@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="es" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Software Construction · SWEBOK</title>
-<meta name="description" content="Main ideas of the Software Construction Knowledge Area from the SWEBOK Guide.">
+<title>Bitácora de talleres · Andrés Zubieta</title>
+<meta name="description" content="Blog de talleres de Ingeniería de Sistemas: construcción de software, calidad del software, Flutter y más.">
 <meta name="author" content="Andrés Zubieta">
 <meta name="theme-color" content="#0d1117">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='%23f5a524'%3E/%3E%3C/text%3E%3C/svg%3E">
@@ -17,216 +17,111 @@
 
 <nav>
   <div class="wrap">
-    <a class="logo" href="#top" style="color:inherit">SW<span>/</span>Construction</a>
-    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <a class="logo" href="#top" style="color:inherit">AZ<span>/</span>bitácora</a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menú</button>
     <ul id="menu">
-      <li><a href="#what">Definition</a></li>
-      <li><a href="#fundamentals">Fundamentals</a></li>
-      <li><a href="#managing">Managing</a></li>
-      <li><a href="#practice">Practice</a></li>
-      <li><a href="#tech">Technologies</a></li>
-      <li><a href="#tools">Tools</a></li>
-      <li><a href="#quiz">Quiz</a></li>
-      <li><a href="#author">Author</a></li>
-      <li><a class="page" href="calidad.html">Calidad De Software -→</a></li>
-      <li><a class="page" href="flutter.html">Flutter -→</a></li>
+      <li><a href="#reciente">Lo más reciente</a></li>
+      <li><a href="#talleres">Talleres</a></li>
+      <li><a href="#sobre-mi">Sobre mí</a></li>
+      <li><a class="page" href="https://github.com/AndrewZzz23" target="_blank" rel="noopener">GitHub ↗</a></li>
     </ul>
   </div>
   <div class="progress" aria-hidden="true"></div>
 </nav>
 
-<header class="hero" id="top">
+<header class="hero home-hero" id="top">
   <div class="wrap">
-    <span class="tag">SWEBOK Guide · Knowledge Area: Software Construction</span>
-    <h1>Where design becomes <em>working software.</em></h1>
-    <p>A summary of the main ideas of the Software Construction chapter of the Software Engineering Body of Knowledge (SWEBOK): its principles, how it is managed, and the practices, technologies and tools behind it.</p>
-    <div class="btns">
-      <a class="btn primary" href="#what">Start reading</a>
-      <a class="btn ghost" href="#takeaways">Key takeaways</a>
+    <span class="tag">Ingeniería de Sistemas · Universidad del Tolima</span>
+    <h1>Bitácora de <em>talleres.</em></h1>
+    <p>Apuntes, investigaciones y prácticas de mis clases de ingeniería de software. Cada entrada es un taller: un tema estudiado a fondo y explicado con ejemplos.</p>
+    <div class="stats">
+      <div><b>3</b><small>talleres publicados</small></div>
+      <div><b>2026-2</b><small>semestre</small></div>
+      <div><b>13 oct</b><small>última entrada</small></div>
     </div>
   </div>
 </header>
 
-<!-- DEFINITION -->
-<section id="what">
+<!-- DESTACADO -->
+<section id="reciente">
   <div class="wrap">
-    <span class="kicker">01 · Definition</span>
-    <h2>What is software construction?</h2>
-    <div class="def reveal">
-      <div>
-        <p class="quote">Software construction is the detailed creation of working software through a combination of coding, verification, unit testing, integration testing and debugging.</p>
-        <p class="lead" style="margin-top:22px">It is the knowledge area closest to the code, but it is not isolated. Construction is strongly linked to <b>design</b> (it continues design at a detailed level) and to <b>testing</b> (developers verify their own code continuously). It also produces the largest number of configuration items in a project: source files, documentation and test cases.</p>
+    <span class="kicker">Lo más reciente</span>
+    <h2>Último taller</h2>
+    <a class="featured reveal" href="flutter.html" style="color:inherit">
+      <div class="art">
+        <span class="badge">Nuevo</span>
+        <span class="big" aria-hidden="true">03</span>
       </div>
-      <div class="flow">
-        <div><span>Requirements</span><small>what</small></div>
-        <div><span>Architecture &amp; Design</span><small>how (structure)</small></div>
-        <div class="hl"><span><b>Construction</b></span><small>how (code)</small></div>
-        <div><span>Testing</span><small>does it work?</small></div>
-        <div><span>Operations &amp; Maintenance</span><small>keep it running</small></div>
+      <div class="body">
+        <div class="post-meta" style="margin-top:0"><b>Taller 03</b><span>13 oct 2026</span><span>Desarrollo móvil</span></div>
+        <h3>Flutter: un solo código para todas las pantallas</h3>
+        <p>Actualización tecnológica (CIPAS): qué es Flutter, su historia, características y proyectos reconocidos, cómo instalarlo y un ejemplo práctico. Incluye la presentación y la app «Mis tareas» funcionando en el navegador.</p>
+        <span class="read">Leer el taller →</span>
       </div>
-    </div>
+    </a>
   </div>
 </section>
 
-<!-- FUNDAMENTALS -->
-<section id="fundamentals">
+<!-- TODOS -->
+<section id="talleres">
   <div class="wrap">
-    <span class="kicker">02 · Fundamentals</span>
-    <h2>Five principles behind good construction</h2>
-    <p class="lead">The chapter defines a set of basic principles that guide every decision a developer makes while writing code.</p>
-    <div class="grid g3">
-      <div class="card reveal"><span class="num">1.1</span><h3>Minimizing complexity</h3><p>People have a limited capacity to hold complex structures in their minds. Code should be simple and readable rather than clever. Standards, modular design and clear naming help reduce complexity.</p></div>
-      <div class="card reveal"><span class="num">1.2</span><h3>Anticipating &amp; embracing change</h3><p>Software changes over time because its environment changes. Developers should build code that is easy to extend and modify, instead of assuming requirements are final.</p></div>
-      <div class="card reveal"><span class="num">1.3</span><h3>Constructing for verification</h3><p>Code should be written so that faults are easy to find: coding standards, code reviews, unit tests, automated testing and avoiding hard-to-understand language structures.</p></div>
-      <div class="card reveal"><span class="num">1.4</span><h3>Reuse</h3><p>Using existing assets (libraries, components, services) to solve new problems. It improves productivity, quality and cost — and it has two sides: construction <i>for</i> reuse and construction <i>with</i> reuse.</p></div>
-      <div class="card reveal"><span class="num">1.5</span><h3>Standards in construction</h3><p>External standards (e.g. language specifications, IEEE/ISO standards) and internal ones (team coding conventions) help achieve efficiency, quality and consistency.</p></div>
+    <span class="kicker">Archivo</span>
+    <h2>Todos los talleres</h2>
+    <div class="filters" role="group" aria-label="Filtrar por tema">
+      <button type="button" data-filter="todos" aria-pressed="true">Todos</button>
+      <button type="button" data-filter="ingenieria" aria-pressed="false">Ingeniería de software</button>
+      <button type="button" data-filter="calidad" aria-pressed="false">Calidad</button>
+      <button type="button" data-filter="movil" aria-pressed="false">Desarrollo móvil</button>
     </div>
+    <ul class="posts">
+      <li class="post" data-cat="movil">
+        <a href="flutter.html">
+          <div class="date"><b>Taller 03</b>13 oct 2026</div>
+          <div>
+            <h3>Flutter: un solo código para todas las pantallas</h3>
+            <p>Presentación sobre el framework de Google y la app de ejemplo «Mis tareas», compilada a web para probarla desde el navegador.</p>
+            <div class="tags"><span>Flutter</span><span>Dart</span><span>Exposición</span><span>3 min + diapositivas</span></div>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+      <li class="post" data-cat="calidad">
+        <a href="calidad.html">
+          <div class="date"><b>Taller 02</b>30 sep 2026</div>
+          <div>
+            <h3>Calidad del software: 17 preguntas</h3>
+            <p>Cuestionario sobre calidad de diseño y de concordancia, calidad en la Web, SQA y revisiones técnicas, ISO 9001 e ISO/IEC 9126, métricas y modelos de calidad.</p>
+            <div class="tags"><span>SQA</span><span>ISO</span><span>Métricas</span><span>13 min</span></div>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+      <li class="post" data-cat="ingenieria">
+        <a href="swebok.html">
+          <div class="date"><b>Taller 01</b>29 sep 2026</div>
+          <div>
+            <h3>Software Construction: donde el diseño se vuelve software</h3>
+            <p>Resumen del área de Construcción del SWEBOK: principios, gestión, consideraciones prácticas, tecnologías y herramientas, con un quiz para autoevaluarse.</p>
+            <div class="tags"><span>SWEBOK</span><span>Quiz</span><span>En inglés</span><span>5 min</span></div>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+    </ul>
   </div>
 </section>
 
-<!-- MANAGING -->
-<section id="managing">
+<!-- SOBRE MÍ -->
+<section id="sobre-mi">
   <div class="wrap">
-    <span class="kicker">03 · Managing construction</span>
-    <h2>Construction has to be planned and measured</h2>
-    <div class="grid g2">
-      <div class="card reveal"><h3>Life cycle models</h3><p>In linear models (waterfall), construction happens mainly after design is complete. In iterative and agile models (Scrum, XP, DevOps), design, construction and testing overlap and repeat in short cycles.</p></div>
-      <div class="card reveal"><h3>Construction planning</h3><p>Defines the order in which components are built and integrated, the construction method, the approach to quality, and the allocation of tasks to developers.</p></div>
-      <div class="card reveal"><h3>Construction measurement</h3><p>Many activities can be measured: code developed or modified, code complexity, inspection statistics, fault-fix and find rates, effort and schedule. Measurement helps improve the process.</p></div>
-      <div class="card reveal"><h3>Managing dependencies</h3><p>Modern software depends on many third-party packages. Teams must track versions, licenses and vulnerabilities of those dependencies, often with package managers.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PRACTICAL -->
-<section id="practice">
-  <div class="wrap">
-    <span class="kicker">04 · Practical considerations</span>
-    <h2>From theory to everyday coding</h2>
-    <p class="lead">Construction is driven by practical considerations. These are the main activities a developer performs.</p>
-    <div class="tbl reveal">
-    <table>
-      <thead><tr><th scope="col">Topic</th><th scope="col">Main idea</th></tr></thead>
-      <tbody>
-      <tr><td>Construction design</td><td>Some design work always happens during construction, at a smaller scale (classes, functions, algorithms).</td></tr>
-      <tr><td>Construction languages</td><td>Any form of communication used to specify an executable solution: configuration languages, toolkit languages, scripting languages and programming languages. Visual and low-code / no-code platforms are also included.</td></tr>
-      <tr><td>Coding</td><td>Techniques for understandable code: good naming, logical structure, error handling, resource management, security considerations and documentation.</td></tr>
-      <tr><td>Construction testing</td><td>Unit and integration testing done by the developer to reduce the gap between inserting a fault and detecting it.</td></tr>
-      <tr><td>Reuse</td><td>Construction <b>for</b> reuse creates assets that others can use; construction <b>with</b> reuse selects, evaluates and integrates existing assets.</td></tr>
-      <tr><td>Construction quality</td><td>Unit testing, test-first development, assertions, debugging, inspections, technical reviews and static analysis.</td></tr>
-      <tr><td>Integration</td><td>Combining separately built components into a working system — preferably incrementally, as in continuous integration.</td></tr>
-      <tr><td>Cross-platform &amp; migration</td><td>Building software that runs on different platforms and moving existing (legacy) systems to new technologies.</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-</section>
-
-<!-- TECHNOLOGIES -->
-<section id="tech">
-  <div class="wrap">
-    <span class="kicker">05 · Construction technologies</span>
-    <h2>Techniques every developer should know</h2>
-    <p class="lead">The chapter lists a wide range of technologies. The ones in green were added or expanded in SWEBOK V4.</p>
-    <div class="chips reveal">
-      <span class="chip">API design and use</span>
-      <span class="chip">Object-oriented runtime issues</span>
-      <span class="chip">Parameterization &amp; generics</span>
-      <span class="chip">Assertions &amp; design by contract</span>
-      <span class="chip">Defensive programming</span>
-      <span class="chip">Error &amp; exception handling</span>
-      <span class="chip">Fault tolerance</span>
-      <span class="chip">Executable models</span>
-      <span class="chip">State-based &amp; table-driven</span>
-      <span class="chip">Runtime configuration &amp; i18n</span>
-      <span class="chip">Grammar-based input processing</span>
-      <span class="chip">Concurrency primitives</span>
-      <span class="chip">Middleware</span>
-      <span class="chip">Distributed software</span>
-      <span class="chip">Heterogeneous systems</span>
-      <span class="chip">Performance analysis &amp; tuning</span>
-      <span class="chip">Platform standards</span>
-      <span class="chip">Test-first programming</span>
-      <span class="chip new">Feedback loops for construction</span>
-      <span class="chip new">Visual programming</span>
-      <span class="chip new">Low-code / no-code</span>
-    </div>
-
-    <div class="grid g2" style="margin-top:44px">
-      <div class="card reveal">
-        <h3>Example: defensive programming</h3>
-        <p>The code protects itself against invalid inputs instead of trusting the caller. Combined with clear exception handling, faults are detected early and close to their origin.</p>
-<pre><span class="k">def</span> <span class="f">apply_discount</span>(price, percent):
-    <span class="c"># Precondition (design by contract)</span>
-    <span class="k">if</span> price &lt; <span class="s">0</span>:
-        <span class="k">raise</span> ValueError(<span class="s">"price must be positive"</span>)
-    <span class="k">if not</span> <span class="s">0</span> &lt;= percent &lt;= <span class="s">100</span>:
-        <span class="k">raise</span> ValueError(<span class="s">"invalid percent"</span>)
-    <span class="k">return</span> price * (<span class="s">1</span> - percent / <span class="s">100</span>)</pre>
-      </div>
-      <div class="card reveal">
-        <h3>Example: test-first programming</h3>
-        <p>Tests are written before the code. They act as a specification, give fast feedback and make refactoring safer.</p>
-<pre><span class="k">def</span> <span class="f">test_discount_ten_percent</span>():
-    <span class="k">assert</span> apply_discount(<span class="s">100</span>, <span class="s">10</span>) == <span class="s">90</span>
-
-<span class="k">def</span> <span class="f">test_rejects_negative_price</span>():
-    <span class="k">with</span> pytest.raises(ValueError):
-        apply_discount(<span class="s">-5</span>, <span class="s">10</span>)</pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TOOLS -->
-<section id="tools">
-  <div class="wrap">
-    <span class="kicker">06 · Construction tools</span>
-    <h2>The developer's toolbox</h2>
-    <div class="grid g3">
-      <div class="card reveal"><h3>Development environments</h3><p>IDEs integrate editing, compiling, debugging and version control in one place, e.g. VS Code, IntelliJ, Visual Studio.</p></div>
-      <div class="card reveal"><h3>Visual &amp; GUI builders</h3><p>Tools that let developers create user interfaces and even logic visually, including low-code platforms.</p></div>
-      <div class="card reveal"><h3>Unit testing tools</h3><p>Frameworks such as JUnit, pytest or xUnit that automate the execution of tests and report results.</p></div>
-      <div class="card reveal"><h3>Profiling &amp; analysis</h3><p>Performance profilers, program slicing and static analysis tools that help understand and optimize code behavior.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- TAKEAWAYS -->
-<section id="takeaways">
-  <div class="wrap">
-    <span class="kicker">07 · Conclusions</span>
-    <h2>Key takeaways</h2>
-    <div class="grid g3">
-      <div class="card reveal"><span class="num">#1</span><h3>Code is for humans</h3><p>Minimizing complexity is the central goal: readable code is easier to verify, change and maintain.</p></div>
-      <div class="card reveal"><span class="num">#2</span><h3>Quality is built in</h3><p>Quality is not added at the end. Unit tests, reviews and static analysis are part of construction itself.</p></div>
-      <div class="card reveal"><span class="num">#3</span><h3>Change is normal</h3><p>Good construction anticipates change through modularity, reuse, standards and continuous integration.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- QUIZ -->
-<section id="quiz">
-  <div class="wrap">
-    <span class="kicker">08 · Self-check</span>
-    <h2>Test what you learned</h2>
-    <p class="lead">Five quick questions about the chapter. Pick an answer to see if you got it right.</p>
-    <div class="quiz" id="quizList"></div>
-    <div class="score" aria-live="polite"><span id="scoreText">Score: 0 / 5</span><button id="resetQuiz" type="button">Try again</button></div>
-  </div>
-</section>
-
-<!-- AUTHOR -->
-<section id="author">
-  <div class="wrap">
-    <span class="kicker">09 · Author</span>
-    <h2>Who made this</h2>
+    <span class="kicker">Sobre mí</span>
+    <h2>Quién escribe</h2>
     <div class="author reveal">
       <div class="avatar" aria-hidden="true">AZ</div>
       <div>
         <h3>Andrés Zubieta</h3>
-        <small>Systems Engineering · Universidad del Tolima</small>
-        <p>Research, writing, design and development of this page were done individually as a university assignment.</p>
+        <small>Ingeniería de Sistemas · Universidad del Tolima</small>
+        <p>Desarrollador y estudiante. Aquí publico los talleres de mis clases: la investigación, el diseño y el desarrollo de cada página los hago yo.</p>
         <a href="https://github.com/AndrewZzz23" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </div>
@@ -235,46 +130,22 @@
 
 <footer>
   <div class="wrap">
-    <span>Source: IEEE Computer Society, <i>Guide to the Software Engineering Body of Knowledge (SWEBOK)</i>, Software Construction Knowledge Area.<br>Made by Andrés Zubieta · Universidad del Tolima.</span>
-    <a href="https://www.computer.org/education/bodies-of-knowledge/software-engineering" target="_blank" rel="noopener">SWEBOK official site ↗</a>
+    <span>Bitácora de talleres · Andrés Zubieta · Universidad del Tolima.</span>
+    <a href="#top">Volver arriba ↑</a>
   </div>
 </footer>
 
-<a class="to-top" href="#top" aria-label="Back to top">↑</a>
+<a class="to-top" href="#top" aria-label="Volver arriba">↑</a>
 
 <script src="main.js"></script>
 <script>
-// Quiz
-const questions=[
-  {q:'Which principle is described as the central goal of software construction?',o:['Maximizing performance','Minimizing complexity','Writing as much code as possible','Avoiding all testing'],a:1,w:'People can only hold limited complexity in mind, so readable, simple code is the core goal.'},
-  {q:'What is the difference between construction FOR reuse and construction WITH reuse?',o:['There is no difference','FOR reuse creates reusable assets; WITH reuse integrates existing ones','FOR reuse only applies to databases','WITH reuse means copying code without testing'],a:1,w:'Construction for reuse produces assets others can use; construction with reuse selects and integrates existing ones.'},
-  {q:'In agile and iterative life cycles, construction…',o:['Starts only after all design is finished','Overlaps with design and testing in short cycles','Is done by a separate team at the end','Is not necessary'],a:1,w:'In iterative models, design, construction and testing repeat and overlap in each cycle.'},
-  {q:'Which of these is a technique for constructing for verification?',o:['Using obscure language tricks','Skipping code reviews','Writing unit tests and following coding standards','Removing error handling'],a:2,w:'Standards, reviews and unit tests make faults easier to find.'},
-  {q:'Which technologies were added or expanded in SWEBOK V4?',o:['Punch cards and mainframes','Low-code / no-code and visual programming','Only assembly language','None, the chapter did not change'],a:1,w:'V4 added topics such as feedback loops, visual programming and low-code / no-code.'}
-];
-const list=document.getElementById('quizList'), scoreText=document.getElementById('scoreText');
-let score=0;
-function renderQuiz(){
-  score=0; scoreText.textContent='Score: 0 / '+questions.length; list.innerHTML='';
-  questions.forEach((item,i)=>{
-    const box=document.createElement('div'); box.className='q';
-    box.innerHTML='<h3>'+(i+1)+'. '+item.q+'</h3><div class="opts"></div><p class="why">'+item.w+'</p>';
-    const opts=box.querySelector('.opts');
-    item.o.forEach((text,j)=>{
-      const b=document.createElement('button'); b.type='button'; b.textContent=text;
-      b.addEventListener('click',()=>{
-        opts.querySelectorAll('button').forEach((x,k)=>{x.disabled=true;if(k===item.a)x.classList.add('ok')});
-        if(j===item.a) score++; else b.classList.add('bad');
-        box.classList.add('done');
-        scoreText.textContent='Score: '+score+' / '+questions.length;
-      });
-      opts.appendChild(b);
-    });
-    list.appendChild(box);
-  });
-}
-document.getElementById('resetQuiz').addEventListener('click',renderQuiz);
-renderQuiz();
+// Filtro por tema
+const btns=document.querySelectorAll('.filters button'), posts=document.querySelectorAll('.post');
+btns.forEach(b=>b.addEventListener('click',()=>{
+  const f=b.dataset.filter;
+  btns.forEach(x=>x.setAttribute('aria-pressed',x===b));
+  posts.forEach(p=>p.hidden=!(f==='todos'||p.dataset.cat===f));
+}));
 </script>
 </body>
 </html>
