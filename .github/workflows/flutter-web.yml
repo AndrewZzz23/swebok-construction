@@ -40,6 +40,10 @@ jobs:
           rm -rf flutter/app
           mkdir -p flutter
           cp -r flutter-app/build/web flutter/app
+          # Usar el CanvasKit incluido en el build en vez del CDN de Google
+          sed -i 's|_flutter.loader.load({|_flutter.loader.load({ config: { canvasKitBaseUrl: "canvaskit/" },|' flutter/app/flutter_bootstrap.js
+          grep -q 'canvasKitBaseUrl' flutter/app/flutter_bootstrap.js
+          sed -i 's|<title>mis_tareas</title>|<title>Mis tareas · Flutter</title>|' flutter/app/index.html
 
       - name: Publicar en main
         run: |

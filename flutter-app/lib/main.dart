@@ -1,10 +1,14 @@
 // Ejemplo práctico – "Mis tareas" (Flutter)
-// Uso: flutter create mis_tareas  →  reemplazar lib/main.dart por este archivo  →  flutter run
-// También funciona pegándolo en https://dartpad.dev
+// Versión web publicada en el sitio: igual a la de la presentación, más un tema
+// con fuente incluida y un texto de ayuda en el campo.
 
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MaterialApp(home: Tareas()));
+void main() => runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'DM Sans', colorSchemeSeed: Colors.blue),
+      home: const Tareas(),
+    ));
 
 class Tareas extends StatefulWidget {
   const Tareas({super.key});
@@ -27,7 +31,14 @@ class _TareasState extends State<Tareas> {
     return Scaffold(
       appBar: AppBar(title: const Text('Mis tareas')),
       body: Column(children: [
-        TextField(controller: _ctrl, onSubmitted: (_) => _agregar()),
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: TextField(
+            controller: _ctrl,
+            decoration: const InputDecoration(hintText: 'Escribe una tarea y pulsa +'),
+            onSubmitted: (_) => _agregar(),
+          ),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: _items.length,

@@ -12,3 +12,9 @@ dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: DM Sans
+      fonts:
+        - asset: fonts/DMSans-Regular.ttf
+        - asset: fonts/DMSans-Bold.ttf
+          weight: 700
