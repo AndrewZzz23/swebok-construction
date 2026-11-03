@@ -1,0 +1,37 @@
+@startuml casos-de-uso
+!include estilo.iuml
+title VigiControl · Diagrama de casos de uso
+left to right direction
+
+actor "Vigilante" as V
+actor "Técnico" as T
+actor "Supervisor" as S
+
+rectangle "VigiControl" {
+  usecase "CU01 Iniciar sesión" as CU01
+  usecase "CU02 Marcar llegada\ny salida del turno" as CU02
+  usecase "CU03 Registrar novedad" as CU03
+  usecase "CU04 Consultar minuta\ndel puesto" as CU04
+  usecase "CU05 Atender novedad\ntécnica" as CU05
+  usecase "CU06 Gestionar puestos\ny personal" as CU06
+  usecase "CU07 Programar turnos" as CU07
+  usecase "CU08 Asignar novedad\na un técnico" as CU08
+  usecase "CU09 Ver panel\ndel supervisor" as CU09
+  usecase "Validar turno en curso" as VAL
+}
+
+V --> CU01
+V --> CU02
+V --> CU03
+V --> CU04
+T --> CU01
+T --> CU05
+S --> CU01
+S --> CU04
+S --> CU06
+S --> CU07
+S --> CU08
+S --> CU09
+CU03 ..> VAL : <<include>>
+CU02 ..> VAL : <<include>>
+@enduml

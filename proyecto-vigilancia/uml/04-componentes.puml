@@ -1,0 +1,33 @@
+@startuml componentes
+!include estilo.iuml
+title VigiControl · Diagrama de componentes
+
+component "Navegador web" as Nav
+
+package "Aplicación VigiControl (Python + Flask)" {
+  component "Sesión y roles" as Ses
+  component "Módulo de turnos\n(programar, marcar)" as Tur
+  component "Módulo de novedades\n(registrar, asignar, minuta)" as Nov
+  component "Módulo de administración\n(puestos, personal, panel)" as Adm
+  component "Vistas\n(plantillas Jinja2)" as Vis
+  component "Acceso a datos\n(db.py)" as Dat
+  interface "HTTP" as HTTP
+  interface "IDatos" as ID
+}
+database "vigicontrol.db\n(SQLite)" as BD
+
+Nav --> HTTP
+HTTP - Ses
+Ses --> Tur
+Ses --> Nov
+Ses --> Adm
+Tur ..> Vis
+Nov ..> Vis
+Adm ..> Vis
+Nov --> Tur : turno en curso
+Tur --> ID
+Nov --> ID
+Adm --> ID
+ID - Dat
+Dat --> BD
+@enduml

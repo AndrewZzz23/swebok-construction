@@ -1,0 +1,25 @@
+@startuml despliegue
+!include estilo.iuml
+title VigiControl · Diagrama de despliegue
+
+node "Celular del vigilante" <<device>> as CV {
+  artifact "Navegador móvil" as N1
+}
+node "Celular del técnico" <<device>> as CT {
+  artifact "Navegador móvil" as N2
+}
+node "PC del supervisor" <<device>> as PC {
+  artifact "Navegador web" as N3
+}
+node "Servidor" <<device>> as SRV {
+  node "Python 3 + Flask" <<execution environment>> {
+    artifact "app.py · db.py\ntemplates · static" as APP
+  }
+  database "vigicontrol.db\n(SQLite)" as BD
+}
+
+CV -- SRV : HTTPS
+CT -- SRV : HTTPS
+PC -- SRV : HTTPS
+APP -- BD
+@enduml

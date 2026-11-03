@@ -1,0 +1,19 @@
+@startuml comunicacion-registrar-novedad
+!include estilo.iuml
+title VigiControl · Diagrama de comunicación: Registrar novedad
+left to right direction
+
+actor ":Vigilante" as V
+rectangle "<u>:PantallaMiTurno</u>" as P
+rectangle "<u>:ControladorNovedades</u>" as C
+rectangle "<u>:Turno</u>" as T
+rectangle "<u>:Marcacion</u>" as M
+rectangle "<u>:Novedad</u>" as N
+
+V -- P : "1: escribir(tipo, descripción) →"
+P -- C : "2: registrarNovedad(tipo, descripción) →"
+C -- T : "3: turnoActual(vigilante) →"
+T -- M : "4: tieneLlegada() →"
+C -- N : "5: [turno en curso] crear(puesto, turno, tipo, descripción) →"
+C -- P : "6: mostrarConfirmacion() →"
+@enduml

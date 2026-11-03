@@ -396,7 +396,7 @@ def minuta(pid):
         registros.append({"fecha": n["fecha"], "clase": "novedad", "tipo": n["tipo"], "estado": n["estado"],
                           "texto": n["descripcion"], "autor": n["autor"], "tecnico": n["tecnico"],
                           "solucion": n["solucion"]})
-    registros.sort(key=lambda r: r["fecha"], reverse=True)
+    registros.sort(key=lambda r: (r["fecha"], r["clase"] == "novedad"), reverse=True)
     return render_template("minuta.html", puesto=puesto, registros=registros)
 
 

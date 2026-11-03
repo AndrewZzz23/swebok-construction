@@ -1,6 +1,6 @@
-# SIGEV · Sistema de Gestión de Servicios de Vigilancia
+# VigiControl · Minuta digital de vigilancia
 
-Prototipo funcional de un software de gestión para una empresa de seguridad electrónica y vigilancia: órdenes de servicio, técnicos, inventario, auditoría e informes.
+Prototipo funcional para una empresa de vigilancia. Los vigilantes marcan su llegada al puesto y registran las novedades del turno. Cuando una novedad es técnica, el supervisor la asigna a un técnico, que marca su llegada y la cierra con la solución.
 
 - Requisitos e historias de usuario: [docs/requisitos-e-historias.md](docs/requisitos-e-historias.md)
 - Diagramas UML (PlantUML): carpeta [uml/](uml/), imágenes en [uml/png/](uml/png/)
@@ -14,30 +14,29 @@ Requiere Python 3.10 o superior.
 ```bash
 cd proyecto-vigilancia
 pip install -r requirements.txt
-python db.py        # crea la base de datos con datos de ejemplo (sigev.db)
+python db.py        # crea la base de datos con datos de ejemplo (vigicontrol.db)
 python app.py       # abre http://localhost:5000
 ```
 
-Para volver a los datos de ejemplo, ejecuta otra vez `python db.py`.
+Los datos de ejemplo se crean en relación con la hora actual. Para empezar de nuevo, ejecuta otra vez `python db.py`.
 
 ## Usuarios de prueba
 
 | Usuario | Contraseña | Rol |
 |---|---|---|
-| admin | admin123 | Administrador |
-| director | director123 | Director técnico |
+| supervisor | supervisor123 | Supervisor |
+| juan | vigilante123 | Vigilante (turno que empieza ahora, sin llegada) |
+| maria | vigilante123 | Vigilante (turno en curso, llegó tarde) |
+| andres | vigilante123 | Vigilante (no ha llegado a su turno) |
 | carlos | tecnico123 | Técnico |
 | laura | tecnico123 | Técnico |
-| almacen | almacen123 | Almacenista |
 
-## Recorrido sugerido para la demostración
+## Recorrido para la demostración
 
-1. Entra como **director**: mira el tablero (la OT-0003 aparece en rojo porque superó el tiempo estimado).
-2. Crea una orden nueva para *Clínica San Rafael — Sede Centro* con la plantilla *Revisión de alarma disparada*. Repite la misma orden: el sistema no la duplica, agrega la nota y sube la prioridad.
-3. Asígnala: los técnicos con ✔ tienen la capacidad requerida. Si eliges uno con ✖, el sistema avisa.
-4. Entra como **carlos**: solo ve sus órdenes. Inicia, pausa, reanuda y cierra la orden.
-5. Entra como **almacen**: registra una entrada por compra y traslada material a una orden. Prueba trasladar más de lo disponible.
-6. Entra como **admin**: revisa la auditoría y el informe de tiempos.
+1. Entra como **juan**: marca la llegada (a tiempo) y registra una novedad técnica, por ejemplo "La cámara 2 no graba".
+2. Entra como **supervisor**: en el panel aparece la novedad abierta, Andrés sin llegada y María tarde. Asigna la novedad a Carlos.
+3. Entra como **carlos**: en "Mis asignaciones", marca la llegada al puesto y cierra la novedad con la solución.
+4. Vuelve como **supervisor** y abre la minuta de la portería: se ven la llegada de Juan, la novedad y la solución del técnico.
 
 ## Tecnologías (software libre)
 
@@ -53,13 +52,14 @@ Para volver a los datos de ejemplo, ejecuta otra vez `python db.py`.
 
 ```
 proyecto-vigilancia/
-├── app.py            rutas y lógica (sesión, catálogos, órdenes, inventario, auditoría, informes)
+├── app.py            rutas y reglas (sesión, puestos, personal, turnos, novedades, minuta, panel)
 ├── db.py             esquema SQLite y datos de ejemplo
 ├── templates/        vistas HTML (Jinja2)
 ├── static/           estilos
 ├── uml/              diagramas en PlantUML (.puml) y sus imágenes (png/)
 ├── docs/             requisitos e historias de usuario
-└── capturas/         pantallazos del prototipo
+├── capturas/         pantallazos del prototipo
+└── demo/             la misma app ejecutándose en el navegador (Pyodide)
 ```
 
 Para regenerar los diagramas: `java -jar plantuml.jar -tpng -o png uml/*.puml`, o con la extensión *PlantUML* de VS Code.

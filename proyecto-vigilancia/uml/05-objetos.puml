@@ -1,0 +1,39 @@
+@startuml objetos
+!include estilo.iuml
+title VigiControl · Diagrama de objetos (turno de Juan con una novedad técnica)
+
+object "juan : Usuario" as juan {
+  nombre = "Juan Pérez"
+  rol = "vigilante"
+}
+object "porteria : Puesto" as porteria {
+  cliente = "Conjunto Los Ocobos"
+  nombre = "Portería principal"
+}
+object "t3 : Turno" as t3 {
+  inicio = "03/11/2026 22:08"
+  fin = "04/11/2026 06:08"
+}
+object "m5 : Marcacion" as m5 {
+  tipo = "Llegada"
+  fecha = "03/11/2026 22:13"
+  tarde = false
+}
+object "n7 : Novedad" as n7 {
+  tipo = "Técnica"
+  descripcion = "La cámara 2 no graba"
+  estado = "En atención"
+}
+object "carlos : Usuario" as carlos {
+  nombre = "Carlos Rojas"
+  rol = "tecnico"
+}
+
+juan -- t3 : vigilante
+t3 -- porteria
+t3 -- m5
+n7 -- t3
+n7 -- porteria
+n7 -- juan : reportada por
+n7 -- carlos : técnico
+@enduml

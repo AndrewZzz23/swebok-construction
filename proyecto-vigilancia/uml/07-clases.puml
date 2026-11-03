@@ -1,0 +1,50 @@
+@startuml clases
+!include estilo.iuml
+title VigiControl · Diagrama de clases (apoyo)
+hide empty methods
+
+class Usuario {
+  nombre
+  usuario
+  rol : {supervisor, vigilante, tecnico}
+  celular
+  activo
+}
+class Puesto {
+  nombre
+  cliente
+  direccion
+  activo
+}
+class Turno {
+  inicio
+  fin
+  --
+  estado()
+}
+class Marcacion {
+  tipo : {Llegada, Salida}
+  fecha
+  tarde
+}
+class Novedad {
+  fecha
+  tipo : {Seguridad, Técnica, Otra}
+  descripcion
+  estado : {Registrada, Asignada, En atención, Cerrada}
+  llegadaTecnico
+  solucion
+  --
+  asignar(tecnico)
+  marcarLlegada()
+  cerrar(solucion)
+}
+
+Usuario "1" -- "*" Turno : vigilante
+Puesto "1" -- "*" Turno
+Turno "1" *-- "0..2" Marcacion
+Puesto "1" -- "*" Novedad
+Turno "0..1" -- "*" Novedad
+Usuario "1" -- "*" Novedad : reporta
+Usuario "0..1" -- "*" Novedad : atiende
+@enduml

@@ -22,7 +22,7 @@
   <form method="post" action="{{ url_for('registrar_novedad') }}" class="tarjeta formulario">
     <h3>Registrar novedad</h3>
     <label>Tipo <select name="tipo">{% for t in TIPOS %}<option>{{ t }}</option>{% endfor %}</select></label>
-    <label>¿Qué pasó? <textarea name="descripcion" rows="4" required placeholder="Ej.: la cámara 2 del parqueadero no graba"></textarea></label>
+    <label>¿Qué pasó? <textarea name="descripcion" rows="4" required placeholder="Ej.: la cámara 2 de la entrada vehicular no graba"></textarea></label>
     <button>Registrar en la minuta</button>
   </form>
   {% endif %}

@@ -1,0 +1,16 @@
+@startuml comunicacion-atender-novedad
+!include estilo.iuml
+title VigiControl · Diagrama de comunicación: Asignar y atender una novedad técnica
+left to right direction
+
+actor ":Supervisor" as S
+actor ":Técnico" as T
+rectangle "<u>:ControladorNovedades</u>" as C
+rectangle "<u>n7:Novedad</u>" as N
+rectangle "<u>carlos:Usuario</u>" as U
+
+S -- C : "1: asignar(n7, carlos) →"
+C -- U : "1.1: validarRol(tecnico) →"
+C -- N : "1.2: asignarTecnico(carlos)\n[estado = Asignada]\n2.1: marcarLlegada(hora)\n[estado = En atención]\n3.1: cerrar(solución)\n[estado = Cerrada] →"
+T -- C : "2: marcarLlegada(n7)\n3: cerrar(n7, solución) →"
+@enduml
