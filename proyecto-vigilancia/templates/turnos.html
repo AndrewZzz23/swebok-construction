@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import chip_estado %}
+{% block titulo %}Turnos{% endblock %}
+{% block contenido %}
+<h1>Turnos</h1>
+<div class="columnas ancha">
+  <div class="tabla"><table>
+    <tr><th>Vigilante</th><th>Puesto</th><th>Inicio</th><th>Fin</th><th>Llegada</th><th>Salida</th><th>Estado</th></tr>
+    {% for t, estado in turnos %}
+    <tr><td>{{ t.vigilante }}</td><td>{{ t.cliente }} · {{ t.puesto }}</td><td>{{ t.inicio|fecha }}</td><td>{{ t.fin|hora }}</td>
+      <td>{{ t.llegada|hora }}{% if t.tarde %} <span class="chip rojo">Tarde</span>{% endif %}</td><td>{{ t.salida|hora }}</td>
+      <td>{{ chip_estado(estado) }}</td></tr>
+    {% endfor %}
+  </table></div>
+  <form method="post" class="tarjeta formulario">
+    <h3>Programar turno</h3>
+    <label>Vigilante <select name="vigilante_id">{% for v in vigilantes %}<option value="{{ v.id }}">{{ v.nombre }}</option>{% endfor %}</select></label>
+    <label>Puesto <select name="puesto_id">{% for p in puestos %}<option value="{{ p.id }}">{{ p.nombre }}</option>{% endfor %}</select></label>
+    <label>Fecha <input type="date" name="fecha" value="{{ hoy }}" required></label>
+    <label>Hora de entrada <input type="time" name="hora" value="18:00" required></label>
+    <label>Duración <select name="horas"><option value="8">8 horas</option><option value="12">12 horas</option></select></label>
+    <button>Programar</button>
+  </form>
+</div>
+{% endblock %}

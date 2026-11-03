@@ -1,11 +1,11 @@
-"""Base de datos SQLite de SIGEV: esquema y datos de ejemplo."""
+"""Base de datos SQLite de VigiControl: esquema y datos de ejemplo."""
 import sqlite3
 from datetime import datetime, timedelta
 from pathlib import Path
 
 from werkzeug.security import generate_password_hash
 
-RUTA_BD = Path(__file__).with_name("sigev.db")
+RUTA_BD = Path(__file__).with_name("vigicontrol.db")
 
 ESQUEMA = """
 CREATE TABLE usuario (
@@ -13,119 +13,45 @@ CREATE TABLE usuario (
     nombre TEXT NOT NULL,
     usuario TEXT NOT NULL UNIQUE,
     clave_hash TEXT NOT NULL,
-    rol TEXT NOT NULL CHECK (rol IN ('admin','director','tecnico','almacenista')),
-    tecnico_id INTEGER REFERENCES tecnico(id),
-    activo INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE cliente (
-    id INTEGER PRIMARY KEY,
-    nombre TEXT NOT NULL,
-    identificacion TEXT NOT NULL,
-    activo INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE cuenta (
-    id INTEGER PRIMARY KEY,
-    cliente_id INTEGER NOT NULL REFERENCES cliente(id),
-    nombre TEXT NOT NULL,
-    direccion TEXT NOT NULL,
-    contacto TEXT,
-    correo TEXT,
-    ruta TEXT,
-    activo INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE capacidad (
-    id INTEGER PRIMARY KEY,
-    nombre TEXT NOT NULL,
-    activo INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE tecnico (
-    id INTEGER PRIMARY KEY,
-    nombre TEXT NOT NULL,
-    documento TEXT NOT NULL,
+    rol TEXT NOT NULL CHECK (rol IN ('supervisor','vigilante','tecnico')),
     celular TEXT,
     activo INTEGER NOT NULL DEFAULT 1
 );
-CREATE TABLE tecnico_capacidad (
-    tecnico_id INTEGER NOT NULL REFERENCES tecnico(id),
-    capacidad_id INTEGER NOT NULL REFERENCES capacidad(id),
-    PRIMARY KEY (tecnico_id, capacidad_id)
-);
-CREATE TABLE plantilla (
+CREATE TABLE puesto (
     id INTEGER PRIMARY KEY,
     nombre TEXT NOT NULL,
-    descripcion TEXT,
-    prioridad INTEGER NOT NULL DEFAULT 2,
-    tiempo_estimado INTEGER NOT NULL,
-    capacidad_id INTEGER REFERENCES capacidad(id),
+    cliente TEXT NOT NULL,
+    direccion TEXT NOT NULL,
     activo INTEGER NOT NULL DEFAULT 1
 );
-CREATE TABLE orden (
+CREATE TABLE turno (
     id INTEGER PRIMARY KEY,
-    cuenta_id INTEGER NOT NULL REFERENCES cuenta(id),
-    plantilla_id INTEGER NOT NULL REFERENCES plantilla(id),
-    prioridad INTEGER NOT NULL,
-    estado TEXT NOT NULL DEFAULT 'En espera',
-    comentarios TEXT,
-    tecnico_id INTEGER REFERENCES tecnico(id),
-    programada_para TEXT,
-    creada_en TEXT NOT NULL,
-    creada_por TEXT NOT NULL,
-    inicio TEXT,
-    fin TEXT,
-    diagnostico TEXT,
-    solucion TEXT
-);
-CREATE TABLE pausa (
-    id INTEGER PRIMARY KEY,
-    orden_id INTEGER NOT NULL REFERENCES orden(id),
-    motivo TEXT NOT NULL,
+    vigilante_id INTEGER NOT NULL REFERENCES usuario(id),
+    puesto_id INTEGER NOT NULL REFERENCES puesto(id),
     inicio TEXT NOT NULL,
-    fin TEXT
+    fin TEXT NOT NULL
 );
-CREATE TABLE orden_evento (
+CREATE TABLE marcacion (
     id INTEGER PRIMARY KEY,
-    orden_id INTEGER NOT NULL REFERENCES orden(id),
+    turno_id INTEGER NOT NULL REFERENCES turno(id),
+    tipo TEXT NOT NULL CHECK (tipo IN ('Llegada','Salida')),
     fecha TEXT NOT NULL,
-    usuario TEXT NOT NULL,
-    tipo TEXT NOT NULL,
-    detalle TEXT
+    tarde INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (turno_id, tipo)
 );
-CREATE TABLE articulo (
+CREATE TABLE novedad (
     id INTEGER PRIMARY KEY,
-    codigo TEXT NOT NULL UNIQUE,
-    nombre TEXT NOT NULL,
-    unidad TEXT NOT NULL,
-    tipo TEXT NOT NULL CHECK (tipo IN ('Recuperable','Consumible')),
-    existencia_minima INTEGER NOT NULL DEFAULT 0,
-    activo INTEGER NOT NULL DEFAULT 1
-);
-CREATE TABLE bodega (
-    id INTEGER PRIMARY KEY,
-    nombre TEXT NOT NULL,
-    tipo TEXT NOT NULL CHECK (tipo IN ('Principal','Cuenta')),
-    cuenta_id INTEGER REFERENCES cuenta(id)
-);
-CREATE TABLE movimiento (
-    id INTEGER PRIMARY KEY,
-    tipo TEXT NOT NULL CHECK (tipo IN ('Entrada','Traslado')),
+    puesto_id INTEGER NOT NULL REFERENCES puesto(id),
+    turno_id INTEGER REFERENCES turno(id),
+    reportada_por INTEGER NOT NULL REFERENCES usuario(id),
     fecha TEXT NOT NULL,
-    articulo_id INTEGER NOT NULL REFERENCES articulo(id),
-    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
-    bodega_origen_id INTEGER REFERENCES bodega(id),
-    bodega_destino_id INTEGER NOT NULL REFERENCES bodega(id),
-    orden_id INTEGER REFERENCES orden(id),
-    proveedor TEXT,
-    factura TEXT,
-    usuario TEXT NOT NULL
-);
-CREATE TABLE auditoria (
-    id INTEGER PRIMARY KEY,
-    fecha TEXT NOT NULL,
-    usuario TEXT NOT NULL,
-    modulo TEXT NOT NULL,
-    accion TEXT NOT NULL,
-    registro TEXT,
-    detalle TEXT
+    tipo TEXT NOT NULL CHECK (tipo IN ('Seguridad','Técnica','Otra')),
+    descripcion TEXT NOT NULL,
+    estado TEXT NOT NULL DEFAULT 'Registrada',
+    tecnico_id INTEGER REFERENCES usuario(id),
+    llegada_tecnico TEXT,
+    cerrada_en TEXT,
+    solucion TEXT
 );
 """
 
@@ -147,125 +73,69 @@ def crear_bd():
         RUTA_BD.unlink()
     con = conectar()
     con.executescript(ESQUEMA)
-    ahora = datetime.now().replace(microsecond=0)
+    ahora = datetime.now().replace(second=0, microsecond=0)
     ins = con.execute
 
-    for nombre in ("CCTV", "Alarmas", "Control de acceso", "Cercas eléctricas"):
-        ins("INSERT INTO capacidad (nombre) VALUES (?)", (nombre,))
-
-    tecnicos = [
-        ("Carlos Rojas", "1110456789", "3001234567", (1, 2)),
-        ("Laura Méndez", "1110987654", "3017654321", (2, 3)),
-        ("Pedro Gómez", "93456123", "3159876543", (1, 4)),
-    ]
-    for nombre, doc, cel, caps in tecnicos:
-        tid = ins("INSERT INTO tecnico (nombre, documento, celular) VALUES (?,?,?)",
-                  (nombre, doc, cel)).lastrowid
-        for c in caps:
-            ins("INSERT INTO tecnico_capacidad VALUES (?,?)", (tid, c))
-
     usuarios = [
-        ("Administrador", "admin", "admin123", "admin", None),
-        ("Diana Torres (Directora técnica)", "director", "director123", "director", None),
-        ("Carlos Rojas", "carlos", "tecnico123", "tecnico", 1),
-        ("Laura Méndez", "laura", "tecnico123", "tecnico", 2),
-        ("Jorge Díaz (Almacenista)", "almacen", "almacen123", "almacenista", None),
+        ("Diana Torres", "supervisor", "supervisor123", "supervisor", "3001112233"),
+        ("Juan Pérez", "juan", "vigilante123", "vigilante", "3002223344"),
+        ("María López", "maria", "vigilante123", "vigilante", "3003334455"),
+        ("Andrés Castro", "andres", "vigilante123", "vigilante", "3004445566"),
+        ("Carlos Rojas", "carlos", "tecnico123", "tecnico", "3005556677"),
+        ("Laura Méndez", "laura", "tecnico123", "tecnico", "3006667788"),
     ]
-    for nombre, usuario, clave, rol, tid in usuarios:
-        ins("INSERT INTO usuario (nombre, usuario, clave_hash, rol, tecnico_id) VALUES (?,?,?,?,?)",
-            (nombre, usuario, generate_password_hash(clave), rol, tid))
+    for nombre, usuario, clave, rol, celular in usuarios:
+        ins("INSERT INTO usuario (nombre, usuario, clave_hash, rol, celular) VALUES (?,?,?,?,?)",
+            (nombre, usuario, generate_password_hash(clave), rol, celular))
 
-    clientes = [
-        ("Clínica San Rafael", "900123456-1"),
-        ("Conjunto Residencial Los Ocobos", "900654321-7"),
-        ("Supermercados El Ahorro", "800987123-4"),
+    puestos = [
+        ("Portería principal", "Conjunto Residencial Los Ocobos", "Cll 60 # 5-10, Ibagué"),
+        ("Recepción", "Clínica San Rafael", "Cra 3 # 12-45, Ibagué"),
+        ("Parqueadero", "Centro Comercial El Parque", "Av. Ambalá # 70-20, Ibagué"),
     ]
-    for nombre, nit in clientes:
-        ins("INSERT INTO cliente (nombre, identificacion) VALUES (?,?)", (nombre, nit))
+    for p in puestos:
+        ins("INSERT INTO puesto (nombre, cliente, direccion) VALUES (?,?,?)", p)
 
-    ins("INSERT INTO bodega (nombre, tipo) VALUES ('Bodega principal','Principal')")
-    cuentas = [
-        (1, "Sede Centro", "Cra 3 # 12-45, Ibagué", "Marta Ruiz", "seguridad@clinicasr.co", "Centro"),
-        (1, "Sede El Vergel", "Cll 145 # 8-20, Ibagué", "Andrés Peña", "vergel@clinicasr.co", "Oriente"),
-        (2, "Portería principal", "Cll 60 # 5-10, Ibagué", "Administración", "admin@losocobos.co", "Norte"),
-        (3, "Punto Jordán", "Cra 5 # 70-12, Ibagué", "Luis Cárdenas", "jordan@elahorro.co", "Norte"),
-        (3, "Punto Salado", "Cll 20 # 4-33, Ibagué", "Sandra Vela", "salado@elahorro.co", "Sur"),
+    def turno(vigilante, puesto, inicio, horas=8):
+        return ins("INSERT INTO turno (vigilante_id, puesto_id, inicio, fin) VALUES (?,?,?,?)",
+                   (vigilante, puesto, hora(inicio), hora(inicio + timedelta(hours=horas)))).lastrowid
+
+    def marcar(turno_id, tipo, fecha, tarde=0):
+        ins("INSERT INTO marcacion (turno_id, tipo, fecha, tarde) VALUES (?,?,?,?)",
+            (turno_id, tipo, hora(fecha), tarde))
+
+    # Turnos de ayer, ya terminados.
+    ayer = ahora - timedelta(days=1, hours=2)
+    t1 = turno(2, 1, ayer)
+    marcar(t1, "Llegada", ayer + timedelta(minutes=2))
+    marcar(t1, "Salida", ayer + timedelta(hours=8, minutes=5))
+    t2 = turno(3, 2, ayer)
+    marcar(t2, "Llegada", ayer + timedelta(minutes=18), tarde=1)
+    marcar(t2, "Salida", ayer + timedelta(hours=8))
+
+    # Turnos de hoy.
+    turno(2, 1, ahora - timedelta(minutes=5))                  # Juan: aún no marca llegada
+    t4 = turno(3, 2, ahora - timedelta(hours=3))                # María: llegó tarde
+    marcar(t4, "Llegada", ahora - timedelta(hours=2, minutes=35), tarde=1)
+    turno(4, 3, ahora - timedelta(hours=1))                     # Andrés: no ha llegado
+    turno(2, 1, ahora + timedelta(days=1))                      # Juan: mañana
+
+    novedades = [
+        (1, t1, 2, ayer + timedelta(hours=2), "Seguridad",
+         "Persona sospechosa merodeando la portería. Se avisó al cuadrante de la Policía.", "Registrada",
+         None, None, None, None),
+        (1, t1, 2, ayer + timedelta(hours=5), "Técnica", "La cámara 2 de la entrada no graba.", "Cerrada",
+         5, ayer + timedelta(hours=7), ayer + timedelta(hours=7, minutes=40), "Se cambió la fuente de poder."),
+        (2, t4, 3, ahora - timedelta(hours=2), "Técnica", "La talanquera del parqueadero no abre.", "Asignada",
+         6, None, None, None),
+        (2, t4, 3, ahora - timedelta(hours=1), "Otra", "Se recibió un paquete para el área de facturación.",
+         "Registrada", None, None, None, None),
     ]
-    for cuenta in cuentas:
-        cid = ins("INSERT INTO cuenta (cliente_id, nombre, direccion, contacto, correo, ruta) "
-                  "VALUES (?,?,?,?,?,?)", cuenta).lastrowid
-        ins("INSERT INTO bodega (nombre, tipo, cuenta_id) VALUES (?,?,?)",
-            (f"Bodega {cuenta[1]}", "Cuenta", cid))
-
-    plantillas = [
-        ("Revisión de alarma disparada", "Verificar sensores y panel tras un disparo.", 1, 45, 2),
-        ("Mantenimiento preventivo CCTV", "Limpieza, enfoque y revisión de grabación.", 2, 90, 1),
-        ("Instalación de cámara", "Instalar y configurar una cámara nueva.", 2, 120, 1),
-        ("Falla en control de acceso", "Lector o cerradura sin funcionar.", 1, 60, 3),
-        ("Revisión de cerca eléctrica", "Medir voltaje y revisar aisladores.", 3, 60, 4),
-    ]
-    for p in plantillas:
-        ins("INSERT INTO plantilla (nombre, descripcion, prioridad, tiempo_estimado, capacidad_id) "
-            "VALUES (?,?,?,?,?)", p)
-
-    articulos = [
-        ("CAM-4MP", "Cámara domo 4MP", "Unidad", "Recuperable", 5, 12),
-        ("PIR-01", "Sensor de movimiento PIR", "Unidad", "Recuperable", 10, 25),
-        ("PAN-AL", "Panel de alarma 8 zonas", "Unidad", "Recuperable", 2, 3),
-        ("UTP-6", "Cable UTP Cat 6", "Metro", "Consumible", 100, 305),
-        ("CHZ-14", "Chazos 1/4 con tornillo", "Unidad", "Consumible", 200, 150),
-    ]
-    for codigo, nombre, unidad, tipo, minimo, cantidad in articulos:
-        aid = ins("INSERT INTO articulo (codigo, nombre, unidad, tipo, existencia_minima) "
-                  "VALUES (?,?,?,?,?)", (codigo, nombre, unidad, tipo, minimo)).lastrowid
-        ins("INSERT INTO movimiento (tipo, fecha, articulo_id, cantidad, bodega_destino_id, "
-            "proveedor, factura, usuario) VALUES ('Entrada',?,?,?,1,'Distribuidora SegTec','FV-2201','almacen')",
-            (hora(ahora - timedelta(days=10)), aid, cantidad))
-
-    def orden(cuenta, plantilla, estado, tecnico=None, programada=None, inicio=None, fin=None,
-              diagnostico=None, solucion=None, comentarios=None, hace=1):
-        prioridad = con.execute("SELECT prioridad FROM plantilla WHERE id=?", (plantilla,)).fetchone()[0]
-        creada = hora(ahora - timedelta(days=hace))
-        oid = ins("INSERT INTO orden (cuenta_id, plantilla_id, prioridad, estado, comentarios, tecnico_id, "
-                  "programada_para, creada_en, creada_por, inicio, fin, diagnostico, solucion) "
-                  "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                  (cuenta, plantilla, prioridad, estado, comentarios, tecnico, programada, creada,
-                   "director", inicio, fin, diagnostico, solucion)).lastrowid
-        ins("INSERT INTO orden_evento (orden_id, fecha, usuario, tipo, detalle) VALUES (?,?,?,?,?)",
-            (oid, creada, "director", "Creación", comentarios))
-        if tecnico:
-            nombre = con.execute("SELECT nombre FROM tecnico WHERE id=?", (tecnico,)).fetchone()[0]
-            ins("INSERT INTO orden_evento (orden_id, fecha, usuario, tipo, detalle) VALUES (?,?,?,?,?)",
-                (oid, creada, "director", "Asignación",
-                 f"{nombre} para el {datetime.fromisoformat(programada):%d/%m/%Y %H:%M}"))
-        tec_usuario = {1: "carlos", 2: "laura"}.get(tecnico, "tecnico")
-        if inicio:
-            ins("INSERT INTO orden_evento (orden_id, fecha, usuario, tipo, detalle) VALUES (?,?,?,?,?)",
-                (oid, inicio, tec_usuario, "Inicio", None))
-        if fin:
-            ins("INSERT INTO orden_evento (orden_id, fecha, usuario, tipo, detalle) VALUES (?,?,?,?,?)",
-                (oid, fin, tec_usuario, "Cierre", diagnostico))
-        return oid
-
-    hace2 = ahora - timedelta(days=2, hours=3)
-    o1 = orden(1, 2, "Finalizada", 1, hora(hace2), hora(hace2), hora(hace2 + timedelta(minutes=105)),
-               "Cámara 3 desenfocada y DVR con disco al 95%.", "Se enfocó la cámara y se liberó espacio.",
-               "Mantenimiento mensual.", hace=3)
-    ins("INSERT INTO pausa (orden_id, motivo, inicio, fin) VALUES (?,?,?,?)",
-        (o1, "Esperando acceso al cuarto técnico", hora(hace2 + timedelta(minutes=30)),
-         hora(hace2 + timedelta(minutes=40))))
-    hace1 = ahora - timedelta(days=1, hours=5)
-    orden(4, 1, "Finalizada", 2, hora(hace1), hora(hace1), hora(hace1 + timedelta(minutes=35)),
-          "Sensor PIR de bodega con batería baja.", "Cambio de batería y prueba de zona.", hace=2)
-    orden(3, 4, "En ejecución", 1, hora(ahora - timedelta(minutes=70)), hora(ahora - timedelta(minutes=65)),
-          comentarios="El lector de la portería no reconoce tarjetas.")
-    orden(2, 3, "Asignada", 3, hora(ahora + timedelta(days=1)), comentarios="Cámara nueva en parqueadero.")
-    orden(5, 5, "En espera", comentarios="Cliente reporta chispas en un tramo.", hace=0)
-    ins("INSERT INTO movimiento (tipo, fecha, articulo_id, cantidad, bodega_origen_id, bodega_destino_id, "
-        "orden_id, usuario) VALUES ('Traslado',?,4,20,1,2,1,'almacen')", (hora(hace2),))
-
-    ins("INSERT INTO auditoria (fecha, usuario, modulo, accion, registro, detalle) VALUES (?,?,?,?,?,?)",
-        (hora(ahora), "sistema", "Sistema", "Carga inicial", None, "Datos de ejemplo"))
+    for (puesto, turno_id, autor, fecha, tipo, desc, estado, tecnico, llegada, cierre, solucion) in novedades:
+        ins("INSERT INTO novedad (puesto_id, turno_id, reportada_por, fecha, tipo, descripcion, estado, "
+            "tecnico_id, llegada_tecnico, cerrada_en, solucion) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            (puesto, turno_id, autor, hora(fecha), tipo, desc, estado, tecnico,
+             hora(llegada) if llegada else None, hora(cierre) if cierre else None, solucion))
     con.commit()
     con.close()
 

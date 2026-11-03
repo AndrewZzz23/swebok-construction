@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import chip_estado %}
+{% block titulo %}Mis asignaciones{% endblock %}
+{% block contenido %}
+<h1>Mis asignaciones</h1>
+{% for n in novedades %}
+<section class="tarjeta novedad-tecnico {{ 'cerrada' if n.estado == 'Cerrada' }}">
+  <div class="fila">{{ chip_estado(n.estado) }} <small>Reportada el {{ n.fecha|fecha }} por {{ n.autor }}</small></div>
+  <h3>{{ n.descripcion }}</h3>
+  <p>{{ n.cliente }} · {{ n.puesto }} — {{ n.direccion }}</p>
+  {% if n.estado == 'Asignada' %}
+    <form method="post" action="{{ url_for('atender_novedad', nid=n.id, accion='llegada') }}"><button>📍 Marcar llegada al puesto</button></form>
+  {% elif n.estado == 'En atención' %}
+    <p>Llegada: <b>{{ n.llegada_tecnico|hora }}</b></p>
+    <form method="post" action="{{ url_for('atender_novedad', nid=n.id, accion='cerrar') }}" class="formulario">
+      <label>Solución <textarea name="solucion" rows="3" required></textarea></label>
+      <button>✔ Cerrar novedad</button>
+    </form>
+  {% else %}
+    <p><small>Llegada {{ n.llegada_tecnico|hora }} · cerrada {{ n.cerrada_en|fecha }}</small><br>Solución: {{ n.solucion }}</p>
+  {% endif %}
+</section>
+{% else %}
+<div class="tarjeta"><p class="vacio">No tienes novedades asignadas.</p></div>
+{% endfor %}
+{% endblock %}

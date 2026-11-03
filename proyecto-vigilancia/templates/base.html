@@ -3,22 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block titulo %}SIGEV{% endblock %} · SIGEV</title>
+<title>{% block titulo %}VigiControl{% endblock %} · VigiControl</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
 </head>
 <body>
 {% if usuario %}
 <header class="barra">
-  <a class="marca" href="{{ url_for('inicio') }}"><span>◆</span> SIGEV</a>
+  <a class="marca" href="{{ url_for('inicio') }}"><span>◆</span> VigiControl</a>
   <nav>
-    {% if usuario.rol in ('admin','director','tecnico') %}<a href="{{ url_for('tablero') }}">Órdenes</a>{% endif %}
-    {% if usuario.rol in ('admin','director') %}<a href="{{ url_for('orden_nueva') }}">Nueva orden</a>{% endif %}
-    {% for clave, cat in CATALOGOS.items() if usuario.rol in cat.roles and clave != 'articulos' %}
-      <a href="{{ url_for('catalogo_lista', nombre=clave) }}">{{ cat.titulo.split(' ')[0] }}</a>
-    {% endfor %}
-    {% if usuario.rol in ('admin','director','almacenista') %}<a href="{{ url_for('inventario') }}">Inventario</a>{% endif %}
-    {% if usuario.rol in ('admin','director') %}<a href="{{ url_for('informe_tiempos') }}">Informe</a>{% endif %}
-    {% if usuario.rol == 'admin' %}<a href="{{ url_for('auditoria') }}">Auditoría</a>{% endif %}
+    {% if usuario.rol == 'supervisor' %}
+      <a href="{{ url_for('panel') }}">Panel</a>
+      <a href="{{ url_for('novedades') }}">Novedades</a>
+      <a href="{{ url_for('turnos') }}">Turnos</a>
+      <a href="{{ url_for('puestos') }}">Puestos</a>
+      <a href="{{ url_for('personal') }}">Personal</a>
+    {% elif usuario.rol == 'vigilante' %}
+      <a href="{{ url_for('mi_turno') }}">Mi turno</a>
+    {% else %}
+      <a href="{{ url_for('mis_asignaciones') }}">Mis asignaciones</a>
+    {% endif %}
   </nav>
   <div class="quien">{{ usuario.nombre }} · <b>{{ ROLES[usuario.rol] }}</b> <a href="{{ url_for('logout') }}">Salir</a></div>
 </header>

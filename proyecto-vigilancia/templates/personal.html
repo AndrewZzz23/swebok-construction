@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block titulo %}Personal{% endblock %}
+{% block contenido %}
+<h1>Personal</h1>
+<div class="columnas ancha">
+  <div class="tabla"><table>
+    <tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Celular</th><th>Estado</th><th></th></tr>
+    {% for p in personas %}
+    <tr class="{{ '' if p.activo else 'inactivo' }}"><td>{{ p.nombre }}</td><td>{{ p.usuario }}</td><td>{{ ROLES[p.rol] }}</td><td>{{ p.celular or '—' }}</td>
+      <td><span class="chip {{ 'verde' if p.activo else 'gris' }}">{{ 'Activo' if p.activo else 'Inactivo' }}</span></td>
+      <td class="acciones"><a href="{{ url_for('personal', editar=p.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('cambiar_estado', tabla='usuario', rid=p.id) }}"><button class="enlace">{{ 'Inactivar' if p.activo else 'Activar' }}</button></form></td></tr>
+    {% endfor %}
+  </table></div>
+  <form method="post" class="tarjeta formulario">
+    <h3>{{ 'Editar persona' if actual else 'Nueva persona' }}</h3>
+    <label>Nombre <input name="nombre" value="{{ actual.nombre if actual }}" required></label>
+    <label>Usuario <input name="usuario" value="{{ actual.usuario if actual }}" required></label>
+    <label>Contraseña{% if actual %} (vacía = no cambia){% endif %} <input name="clave" type="password" {{ '' if actual else 'required minlength=6' }}></label>
+    <label>Rol <select name="rol">{% for clave, nombre in ROLES.items() %}<option value="{{ clave }}" {{ 'selected' if (actual and actual.rol == clave) or (not actual and clave == 'vigilante') }}>{{ nombre }}</option>{% endfor %}</select></label>
+    <label>Celular <input name="celular" value="{{ actual.celular if actual and actual.celular }}"></label>
+    <div class="botones"><button>Guardar</button>{% if actual %}<a href="{{ url_for('personal') }}">Cancelar</a>{% endif %}</div>
+  </form>
+</div>
+{% endblock %}

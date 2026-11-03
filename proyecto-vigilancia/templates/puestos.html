@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block titulo %}Puestos{% endblock %}
+{% block contenido %}
+<h1>Puestos de vigilancia</h1>
+<div class="columnas ancha">
+  <div class="tabla"><table>
+    <tr><th>Cliente</th><th>Puesto</th><th>Dirección</th><th>Estado</th><th></th></tr>
+    {% for p in puestos %}
+    <tr class="{{ '' if p.activo else 'inactivo' }}"><td>{{ p.cliente }}</td><td>{{ p.nombre }}</td><td>{{ p.direccion }}</td>
+      <td><span class="chip {{ 'verde' if p.activo else 'gris' }}">{{ 'Activo' if p.activo else 'Inactivo' }}</span></td>
+      <td class="acciones"><a href="{{ url_for('minuta', pid=p.id) }}">Minuta</a><a href="{{ url_for('puestos', editar=p.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('cambiar_estado', tabla='puesto', rid=p.id) }}"><button class="enlace">{{ 'Inactivar' if p.activo else 'Activar' }}</button></form></td></tr>
+    {% endfor %}
+  </table></div>
+  <form method="post" class="tarjeta formulario">
+    <h3>{{ 'Editar puesto' if actual else 'Nuevo puesto' }}</h3>
+    <label>Cliente <input name="cliente" value="{{ actual.cliente if actual }}" required></label>
+    <label>Nombre del puesto <input name="nombre" value="{{ actual.nombre if actual }}" required></label>
+    <label>Dirección <input name="direccion" value="{{ actual.direccion if actual }}" required></label>
+    <div class="botones"><button>Guardar</button>{% if actual %}<a href="{{ url_for('puestos') }}">Cancelar</a>{% endif %}</div>
+  </form>
+</div>
+{% endblock %}

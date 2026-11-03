@@ -1,0 +1,13 @@
+{% macro chip_estado(estado) -%}
+<span class="chip {{ {'Registrada':'gris','Asignada':'amarillo','En atención':'azul','Cerrada':'verde','En curso':'verde','Programado':'gris','Sin llegada':'rojo','No se presentó':'rojo','Terminado':'gris'}.get(estado, '') }}">{{ estado }}</span>
+{%- endmacro %}
+{% macro chip_tipo(tipo) -%}
+<span class="chip {{ {'Seguridad':'rojo','Técnica':'azul','Otra':'gris'}[tipo] }}">{{ tipo }}</span>
+{%- endmacro %}
+{% macro asignar(n, tecnicos, volver) -%}
+<form method="post" action="{{ url_for('asignar_novedad', nid=n.id) }}" class="en-linea">
+  <input type="hidden" name="volver" value="{{ volver }}">
+  <select name="tecnico_id">{% for t in tecnicos %}<option value="{{ t.id }}" {{ 'selected' if t.id == n.tecnico_id }}>{{ t.nombre }}</option>{% endfor %}</select>
+  <button class="pequeno">{{ 'Reasignar' if n.tecnico_id else 'Asignar' }}</button>
+</form>
+{%- endmacro %}

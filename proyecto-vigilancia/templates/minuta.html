@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import chip_tipo, chip_estado %}
+{% block titulo %}Minuta{% endblock %}
+{% block contenido %}
+<h1>Minuta · {{ puesto.cliente }} — {{ puesto.nombre }}</h1>
+<p class="sub">{{ puesto.direccion }} · Registro de llegadas, salidas y novedades del puesto.</p>
+<section class="tarjeta">
+  <ol class="linea">
+  {% for r in registros %}
+    <li class="{{ r.clase }}">
+      <small>{{ r.fecha|fecha }}</small>
+      {% if r.clase == 'novedad' %}
+        <div>{{ chip_tipo(r.tipo) }} {% if r.tipo == 'Técnica' %}{{ chip_estado(r.estado) }}{% endif %} <b>{{ r.texto }}</b> <small>— {{ r.autor }}</small></div>
+        {% if r.tecnico %}<div><small>Técnico: {{ r.tecnico }}{% if r.solucion %} · Solución: {{ r.solucion }}{% endif %}</small></div>{% endif %}
+      {% else %}
+        <div>{{ r.texto }}</div>
+      {% endif %}
+    </li>
+  {% else %}<li class="vacio">La minuta está vacía.</li>{% endfor %}
+  </ol>
+</section>
+{% endblock %}

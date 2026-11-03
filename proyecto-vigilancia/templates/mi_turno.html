@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import chip_tipo %}
+{% block titulo %}Mi turno{% endblock %}
+{% block contenido %}
+<h1>Mi turno</h1>
+{% if turno %}
+<div class="columnas">
+  <section class="tarjeta turno">
+    <p class="sub">{{ turno.cliente }}</p>
+    <h2>{{ turno.puesto }}</h2>
+    <p>Horario: <b>{{ turno.inicio|fecha }} – {{ turno.fin|hora }}</b></p>
+    {% if not turno.llegada %}
+      <form method="post" action="{{ url_for('marcar', tid=turno.id, accion='llegada') }}"><button class="grande">📍 Marcar llegada</button></form>
+      <p class="ayuda">Tienes {{ TOLERANCIA }} minutos de tolerancia después de la hora de entrada.</p>
+    {% else %}
+      <p>Llegada: <b>{{ turno.llegada|hora }}</b> {% if turno.tarde %}<span class="chip rojo">Tarde</span>{% else %}<span class="chip verde">A tiempo</span>{% endif %}</p>
+      <form method="post" action="{{ url_for('marcar', tid=turno.id, accion='salida') }}"><button class="grande secundario">🏁 Marcar salida</button></form>
+      <p><a href="{{ url_for('minuta', pid=turno.puesto_id) }}">Ver la minuta del puesto →</a></p>
+    {% endif %}
+  </section>
+  {% if turno.llegada %}
+  <form method="post" action="{{ url_for('registrar_novedad') }}" class="tarjeta formulario">
+    <h3>Registrar novedad</h3>
+    <label>Tipo <select name="tipo">{% for t in TIPOS %}<option>{{ t }}</option>{% endfor %}</select></label>
+    <label>¿Qué pasó? <textarea name="descripcion" rows="4" required placeholder="Ej.: la cámara 2 del parqueadero no graba"></textarea></label>
+    <button>Registrar en la minuta</button>
+  </form>
+  {% endif %}
+</div>
+{% if novedades %}
+<section class="tarjeta">
+  <h3>Últimas novedades del puesto</h3>
+  <table>{% for n in novedades %}<tr><td>{{ n.fecha|fecha }}</td><td>{{ chip_tipo(n.tipo) }}</td><td>{{ n.descripcion }}</td><td><small>{{ n.autor }}</small></td></tr>{% endfor %}</table>
+</section>
+{% endif %}
+{% else %}
+<div class="tarjeta"><h3>No tienes un turno en este momento.</h3><p class="ayuda">Podrás marcar la llegada desde una hora antes del inicio de tu próximo turno.</p></div>
+{% endif %}
+{% if proximos %}
+<section class="tarjeta">
+  <h3>Próximos turnos</h3>
+  <table>{% for t in proximos %}<tr><td>{{ t.inicio|fecha }} – {{ t.fin|hora }}</td><td>{{ t.cliente }} · {{ t.puesto }}</td></tr>{% endfor %}</table>
+</section>
+{% endif %}
+{% endblock %}

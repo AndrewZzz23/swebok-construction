@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SIGEV · Demo en vivo</title>
-<meta name="description" content="Prototipo de SIGEV (Flask + SQLite) ejecutándose en el navegador con Pyodide.">
+<title>VigiControl · Demo en vivo</title>
+<meta name="description" content="Prototipo de VigiControl (Flask + SQLite) ejecutándose en el navegador con Pyodide.">
 <style>
   :root { --fondo: #13233A; --texto: #F5F7FA; --suave: #BFD0E3; --acento: #F2A516; }
   * { box-sizing: border-box; }
@@ -26,26 +26,26 @@
 </head>
 <body>
 <div class="barra">
-  <span>◆ <b>SIGEV</b> · demo en vivo</span>
+  <span>◆ <b>VigiControl</b> · demo en vivo</span>
   <button id="atras" disabled title="Página anterior">← Atrás</button>
   <span id="ruta">cargando…</span>
   <button id="reiniciar" disabled title="Vuelve a los datos de ejemplo">Reiniciar datos</button>
   <a href="https://github.com/AndrewZzz23/swebok-construction/tree/main/proyecto-vigilancia" target="_blank" rel="noopener">Código ↗</a>
 </div>
 <div id="cargando">
-  <h1>Cargando SIGEV…</h1>
+  <h1>Cargando VigiControl…</h1>
   <p id="estado">Descargando Python para el navegador (Pyodide). La primera vez tarda unos 10 a 20 segundos.</p>
   <div class="barra-progreso"><div id="progreso"></div></div>
   <p>Es el mismo código Flask del proyecto, ejecutándose en tu navegador con una base SQLite en memoria. Los cambios se pierden al recargar.</p>
 </div>
-<iframe id="app" title="Aplicación SIGEV"></iframe>
+<iframe id="app" title="Aplicación VigiControl"></iframe>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
 <script>
 const ARCHIVOS = [
   'app.py', 'db.py', 'static/estilos.css',
-  ...['base', 'login', 'error', 'catalogo_lista', 'catalogo_form', 'tablero', 'orden_nueva', 'orden_detalle',
-      'inventario', 'kardex', 'auditoria', 'informe_tiempos'].map(t => `templates/${t}.html`),
+  ...['base', '_macros', 'login', 'error', 'panel', 'novedades', 'turnos', 'puestos', 'personal',
+      'mi_turno', 'mis_asignaciones', 'minuta'].map(t => `templates/${t}.html`),
 ];
 const RUEDAS = ['blinker-1.9.0', 'click-8.2.1', 'itsdangerous-2.2.0', 'jinja2-3.1.6', 'werkzeug-3.1.3', 'flask-3.1.2']
   .map(n => new URL(`wheels/${n}-py3-none-any.whl`, location.href).href);
@@ -94,7 +94,7 @@ async function iniciar() {
     py = await loadPyodide();
     avance('Instalando Flask y SQLite…', 45);
     await py.loadPackage(['sqlite3', 'markupsafe', ...RUEDAS]);
-    avance('Copiando el código de SIGEV…', 75);
+    avance('Copiando el código de VigiControl…', 75);
     py.FS.mkdirTree('/app/templates');
     py.FS.mkdirTree('/app/static');
     await Promise.all(ARCHIVOS.map(async f => {

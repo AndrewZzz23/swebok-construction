@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import chip_estado, chip_tipo, asignar %}
+{% block titulo %}Novedades{% endblock %}
+{% block contenido %}
+<h1>Novedades</h1>
+<form class="filtros">
+  <select name="tipo"><option value="">Todos los tipos</option>{% for t in TIPOS %}<option {{ 'selected' if request.args.tipo == t }}>{{ t }}</option>{% endfor %}</select>
+  <select name="estado"><option value="">Todos los estados</option>{% for e in ESTADOS %}<option {{ 'selected' if request.args.estado == e }}>{{ e }}</option>{% endfor %}</select>
+  <button>Filtrar</button> <a href="{{ url_for('novedades') }}">Limpiar</a>
+</form>
+<div class="tabla"><table>
+  <tr><th>Fecha</th><th>Tipo</th><th>Puesto</th><th>Descripción</th><th>Reporta</th><th>Estado</th><th>Técnico</th></tr>
+  {% for n in novedades %}
+  <tr>
+    <td>{{ n.fecha|fecha }}</td><td>{{ chip_tipo(n.tipo) }}</td>
+    <td><a href="{{ url_for('minuta', pid=n.puesto_id) }}">{{ n.cliente }} · {{ n.puesto }}</a></td>
+    <td>{{ n.descripcion }}{% if n.solucion %}<br><small>Solución: {{ n.solucion }}</small>{% endif %}</td>
+    <td>{{ n.autor }}</td>
+    <td>{% if n.tipo == 'Técnica' %}{{ chip_estado(n.estado) }}{% else %}—{% endif %}</td>
+    <td>{% if n.tipo == 'Técnica' and n.estado in ('Registrada','Asignada') %}{{ asignar(n, tecnicos, url_for('novedades')) }}{% else %}{{ n.tecnico or '—' }}{% endif %}</td>
+  </tr>
+  {% else %}<tr><td colspan="7" class="vacio">No hay novedades con esos filtros.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

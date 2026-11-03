@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import chip_estado, chip_tipo, asignar %}
+{% block titulo %}Panel{% endblock %}
+{% block contenido %}
+<h1>Panel del supervisor</h1>
+<div class="cifras">
+  <div class="cifra"><b>{{ resumen.en_turno }}</b><span>vigilantes en turno</span></div>
+  <div class="cifra {{ 'alerta' if resumen.sin_llegada }}"><b>{{ resumen.sin_llegada }}</b><span>turnos sin llegada</span></div>
+  <div class="cifra {{ 'alerta' if resumen.tarde }}"><b>{{ resumen.tarde }}</b><span>llegaron tarde</span></div>
+  <div class="cifra {{ 'alerta' if resumen.abiertas }}"><b>{{ resumen.abiertas }}</b><span>novedades técnicas abiertas</span></div>
+</div>
+<div class="columnas">
+  <section class="tarjeta">
+    <h3>Turnos de ahora</h3>
+    <table>
+      <tr><th>Vigilante</th><th>Puesto</th><th>Horario</th><th>Llegada</th><th>Estado</th></tr>
+      {% for t, estado in turnos %}
+      <tr><td>{{ t.vigilante }}</td><td><a href="{{ url_for('minuta', pid=t.puesto_id) }}">{{ t.cliente }} · {{ t.puesto }}</a></td>
+        <td>{{ t.inicio|hora }} – {{ t.fin|hora }}</td>
+        <td>{{ t.llegada|hora }}{% if t.tarde %} <span class="chip rojo">Tarde</span>{% endif %}</td>
+        <td>{{ chip_estado(estado) }}</td></tr>
+      {% else %}<tr><td colspan="5" class="vacio">No hay turnos en este momento.</td></tr>{% endfor %}
+    </table>
+  </section>
+  <section class="tarjeta">
+    <h3>Novedades técnicas abiertas</h3>
+    {% for n in abiertas %}
+      <div class="novedad">
+        <div class="fila">{{ chip_estado(n.estado) }} <small>{{ n.fecha|fecha }} · {{ n.cliente }} · {{ n.puesto }}</small></div>
+        <p>{{ n.descripcion }}</p>
+        {% if n.estado in ('Registrada', 'Asignada') %}{{ asignar(n, tecnicos, url_for('panel')) }}{% else %}<small>Atendiendo: {{ n.tecnico }}</small>{% endif %}
+      </div>
+    {% else %}<p class="vacio">No hay novedades técnicas abiertas.</p>{% endfor %}
+  </section>
+</div>
+<section class="tarjeta">
+  <h3>Últimas novedades (24 h)</h3>
+  <table>
+    {% for n in recientes %}
+    <tr><td>{{ n.fecha|fecha }}</td><td>{{ chip_tipo(n.tipo) }}</td><td>{{ n.cliente }} · {{ n.puesto }}</td><td>{{ n.descripcion }}</td><td><small>{{ n.autor }}</small></td></tr>
+    {% else %}<tr><td class="vacio">Sin novedades recientes.</td></tr>{% endfor %}
+  </table>
+</section>
+{% endblock %}
