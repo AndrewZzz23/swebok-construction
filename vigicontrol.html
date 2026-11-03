@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VigiControl · Diseño de Software</title>
+<meta name="description" content="Proyecto de Diseño de Software: minuta digital de vigilancia con historias de usuario, diagramas UML y un prototipo en Flask + SQLite que funciona en el navegador.">
+<meta name="author" content="Andrés Zubieta">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='%23f5a524'%3E/%3E%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.className="js"</script>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .viewer{margin-top:36px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--card);aspect-ratio:16/10}
+  .viewer iframe{display:block;width:100%;height:100%;border:0}
+  .dl{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+  .demo{margin-top:36px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#13233a;height:760px;max-height:85vh}
+  .demo iframe{display:block;width:100%;height:100%;border:0}
+  .steps{counter-reset:s;list-style:none;margin-top:14px}
+  .steps li{counter-increment:s;color:var(--muted);padding:10px 0 10px 44px;position:relative;border-bottom:1px solid var(--line)}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;border-radius:50%;background:rgba(63,184,175,.15);color:var(--accent2);font-family:"JetBrains Mono";font-size:13px;display:grid;place-items:center}
+  .note{color:var(--muted);font-size:14px;margin-top:16px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:28px}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  .users{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+  .users th,.users td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .users th{color:var(--muted);font-weight:500}
+  .users code{font-family:"JetBrains Mono";font-size:14px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html" style="color:inherit">AZ<span>/</span>bitácora</a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menú</button>
+    <ul id="menu">
+      <li><a href="#presentacion">Presentación</a></li>
+      <li><a href="#demo">Demo en vivo</a></li>
+      <li><a href="#documentos">Documentos</a></li>
+      <li><a class="page" href="index.html">← Talleres</a></li>
+    </ul>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <a class="back" href="index.html">← Todos los talleres</a><br>
+    <span class="tag">Diseño de Software · Proyecto G8 · Empresa de vigilancia</span>
+    <h1>VigiControl: <em>la minuta</em> de vigilancia, en el celular.</h1>
+    <p>Los vigilantes marcan su llegada al puesto y registran las novedades del turno. Cuando una novedad es técnica, el supervisor la asigna a un técnico, que marca su llegada y la cierra con la solución.</p>
+    <div class="post-meta"><b>Proyecto</b><span>3 nov 2026</span><span>Metodología ágil</span><span>Python · Flask · SQLite</span></div>
+    <div class="btns">
+      <a class="btn primary" href="#presentacion">Ver presentación</a>
+      <a class="btn ghost" href="#demo">Probar el prototipo</a>
+    </div>
+  </div>
+</header>
+
+<!-- PRESENTACIÓN -->
+<section id="presentacion">
+  <div class="wrap">
+    <span class="kicker">01 · Presentación</span>
+    <h2>Las diapositivas</h2>
+    <p class="lead">El problema, la solución, la metodología, los requisitos y las historias de usuario, los diagramas UML y el prototipo.</p>
+    <div class="viewer reveal">
+      <iframe src="proyecto-vigilancia/presentacion/vigicontrol.pdf#view=FitH" title="Presentación de VigiControl (PDF)" loading="lazy"></iframe>
+    </div>
+    <div class="dl">
+      <a class="btn primary" href="proyecto-vigilancia/presentacion/vigicontrol.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
+      <a class="btn ghost" href="proyecto-vigilancia/presentacion/vigicontrol.pptx" download>Descargar PowerPoint</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="wrap">
+    <span class="kicker">02 · Prototipo en vivo</span>
+    <h2>Pruébalo aquí mismo</h2>
+    <p class="lead">Es el mismo código Flask del proyecto, ejecutándose en tu navegador con Pyodide y una base SQLite en memoria. No hay que instalar nada; los cambios se pierden al recargar.</p>
+    <div class="cols">
+      <div class="reveal">
+        <h3>Recorrido sugerido</h3>
+        <ol class="steps">
+          <li>Entra como <b>juan</b>: marca la llegada y registra una novedad técnica.</li>
+          <li>Entra como <b>supervisor</b>: en el panel asigna la novedad a Carlos.</li>
+          <li>Entra como <b>carlos</b>: marca la llegada al puesto y cierra la novedad.</li>
+          <li>Vuelve como supervisor y abre la <b>minuta</b> del puesto.</li>
+        </ol>
+      </div>
+      <div class="reveal">
+        <h3>Usuarios de prueba</h3>
+        <table class="users">
+          <tr><th>Usuario</th><th>Contraseña</th><th>Rol</th></tr>
+          <tr><td><code>juan</code></td><td><code>vigilante123</code></td><td>Vigilante</td></tr>
+          <tr><td><code>supervisor</code></td><td><code>supervisor123</code></td><td>Supervisor</td></tr>
+          <tr><td><code>carlos</code></td><td><code>tecnico123</code></td><td>Técnico</td></tr>
+        </table>
+        <p class="note">La primera carga tarda unos segundos mientras el navegador descarga Python.</p>
+      </div>
+    </div>
+    <div class="demo reveal">
+      <iframe src="proyecto-vigilancia/demo/" title="Prototipo de VigiControl en vivo" loading="lazy"></iframe>
+    </div>
+    <div class="dl"><a class="btn ghost" href="proyecto-vigilancia/demo/" target="_blank" rel="noopener">Abrir en pantalla completa ↗</a></div>
+  </div>
+</section>
+
+<!-- DOCUMENTOS -->
+<section id="documentos">
+  <div class="wrap">
+    <span class="kicker">03 · Documentos y código</span>
+    <h2>Todo el proyecto en GitHub</h2>
+    <p class="lead">Requisitos, historias de usuario con criterios de aceptación, los diagramas UML en PlantUML y el código del prototipo.</p>
+    <div class="dl">
+      <a class="btn primary" href="https://github.com/AndrewZzz23/swebok-construction/blob/main/proyecto-vigilancia/docs/requisitos-e-historias.md" target="_blank" rel="noopener">Requisitos e historias ↗</a>
+      <a class="btn ghost" href="https://github.com/AndrewZzz23/swebok-construction/tree/main/proyecto-vigilancia/uml" target="_blank" rel="noopener">Diagramas UML ↗</a>
+      <a class="btn ghost" href="https://github.com/AndrewZzz23/swebok-construction/tree/main/proyecto-vigilancia" target="_blank" rel="noopener">Código del prototipo ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Proyecto de Diseño de Software · Grupo G8, empresa de vigilancia.<br>Hecho por Andrés Zubieta · Universidad del Tolima.</span>
+    <a href="https://github.com/AndrewZzz23/swebok-construction/tree/main/proyecto-vigilancia" target="_blank" rel="noopener">Ver en GitHub ↗</a>
+  </div>
+</footer>
+
+<a class="to-top" href="#top" aria-label="Volver arriba">↑</a>
+
+<script src="main.js"></script>
+</body>
+</html>
