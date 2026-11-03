@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIGEV · Demo en vivo</title>
+<meta name="description" content="Prototipo de SIGEV (Flask + SQLite) ejecutándose en el navegador con Pyodide.">
+<style>
+  :root { --fondo: #13233A; --texto: #F5F7FA; --suave: #BFD0E3; --acento: #F2A516; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; background: var(--fondo); color: var(--texto); font-family: system-ui, "Segoe UI", Roboto, sans-serif; }
+  .barra { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 14px; font-size: 14px; }
+  .barra b { color: var(--acento); }
+  .barra button, .barra a { background: #1C3150; color: var(--texto); border: 1px solid #2E4566; border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; text-decoration: none; }
+  .barra button:disabled { opacity: .4; cursor: default; }
+  #ruta { flex: 1; min-width: 160px; background: #0C1828; border-radius: 6px; padding: 5px 10px; font-family: ui-monospace, monospace; color: var(--suave); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  #app { flex: 1; width: 100%; border: 0; background: #f3f5f8; display: none; }
+  #cargando { flex: 1; display: grid; place-content: center; text-align: center; padding: 24px; gap: 14px; }
+  #cargando h1 { margin: 0; font-size: 28px; }
+  #cargando p { margin: 0; color: var(--suave); max-width: 520px; line-height: 1.5; }
+  .barra-progreso { width: 280px; height: 6px; background: #1C3150; border-radius: 99px; overflow: hidden; margin: 0 auto; }
+  .barra-progreso div { height: 100%; width: 5%; background: var(--acento); transition: width .3s; }
+  .error { color: #FF9C8F; }
+</style>
+</head>
+<body>
+<div class="barra">
+  <span>◆ <b>SIGEV</b> · demo en vivo</span>
+  <button id="atras" disabled title="Página anterior">← Atrás</button>
+  <span id="ruta">cargando…</span>
+  <button id="reiniciar" disabled title="Vuelve a los datos de ejemplo">Reiniciar datos</button>
+  <a href="https://github.com/AndrewZzz23/swebok-construction/tree/main/proyecto-vigilancia" target="_blank" rel="noopener">Código ↗</a>
+</div>
+<div id="cargando">
+  <h1>Cargando SIGEV…</h1>
+  <p id="estado">Descargando Python para el navegador (Pyodide). La primera vez tarda unos 10 a 20 segundos.</p>
+  <div class="barra-progreso"><div id="progreso"></div></div>
+  <p>Es el mismo código Flask del proyecto, ejecutándose en tu navegador con una base SQLite en memoria. Los cambios se pierden al recargar.</p>
+</div>
+<iframe id="app" title="Aplicación SIGEV"></iframe>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<script>
+const ARCHIVOS = [
+  'app.py', 'db.py', 'static/estilos.css',
+  ...['base', 'login', 'error', 'catalogo_lista', 'catalogo_form', 'tablero', 'orden_nueva', 'orden_detalle',
+      'inventario', 'kardex', 'auditoria', 'informe_tiempos'].map(t => `templates/${t}.html`),
+];
+const RUEDAS = ['blinker-1.9.0', 'click-8.2.1', 'itsdangerous-2.2.0', 'jinja2-3.1.6', 'werkzeug-3.1.3', 'flask-3.1.2']
+  .map(n => new URL(`wheels/${n}-py3-none-any.whl`, location.href).href);
+
+// Arranque de Python: las contraseñas de demo se comparan sin hash, porque el
+// navegador no trae OpenSSL; el resto de la aplicación es el mismo código.
+const ARRANQUE = `
+import os, sys
+sys.path.insert(0, '/app'); os.chdir('/app')
+import werkzeug.security as seguridad
+seguridad.generate_password_hash = lambda clave, **_: 'demo$' + clave
+seguridad.check_password_hash = lambda guardada, clave: guardada == 'demo$' + clave
+import db
+db.crear_bd()
+import app as sigev
+from werkzeug.datastructures import MultiDict
+cliente = sigev.app.test_client()
+
+def pedir(metodo, ruta, pares):
+    if metodo == 'GET':
+        r = cliente.get(ruta, follow_redirects=True)
+    else:
+        r = cliente.post(ruta, data=MultiDict([tuple(p) for p in pares]), follow_redirects=True)
+    q = r.request.query_string.decode()
+    return [r.status_code, r.get_data(as_text=True), r.request.path + ('?' + q if q else '')]
+
+def reiniciar():
+    global cliente
+    db.crear_bd()
+    cliente = sigev.app.test_client()
+`;
+
+const $ = id => document.getElementById(id);
+const marco = $('app');
+let py, pedir, css = '', rutaActual = '/login';
+const historial = [];
+
+function avance(texto, porcentaje) {
+  $('estado').textContent = texto;
+  $('progreso').style.width = porcentaje + '%';
+}
+
+async function iniciar() {
+  try {
+    avance('Descargando Python para el navegador (Pyodide)…', 10);
+    py = await loadPyodide();
+    avance('Instalando Flask y SQLite…', 45);
+    await py.loadPackage(['sqlite3', 'markupsafe', ...RUEDAS]);
+    avance('Copiando el código de SIGEV…', 75);
+    py.FS.mkdirTree('/app/templates');
+    py.FS.mkdirTree('/app/static');
+    await Promise.all(ARCHIVOS.map(async f => {
+      const r = await fetch('../' + f);
+      if (!r.ok) throw new Error(`No se pudo leer ${f} (${r.status})`);
+      py.FS.writeFile('/app/' + f, await r.text());
+    }));
+    css = py.FS.readFile('/app/static/estilos.css', { encoding: 'utf8' });
+    avance('Creando la base de datos de ejemplo…', 90);
+    await py.runPythonAsync(ARRANQUE);
+    pedir = py.globals.get('pedir');
+    $('cargando').style.display = 'none';
+    marco.style.display = 'block';
+    $('reiniciar').disabled = false;
+    navegar('GET', '/login');
+  } catch (e) {
+    $('estado').innerHTML = '<span class="error">No se pudo cargar la demo: ' + e.message + '</span>';
+    console.error(e);
+  }
+}
+
+function navegar(metodo, ruta, pares = [], guardar = true) {
+  const datos = py.toPy(pares);
+  const respuesta = pedir(metodo, ruta, datos);
+  datos.destroy();
+  const [, html, final] = respuesta.toJs();
+  respuesta.destroy();
+  if (guardar && rutaActual !== final) historial.push(rutaActual);
+  rutaActual = final;
+  $('ruta').textContent = final;
+  $('atras').disabled = historial.length === 0;
+  pintar(html);
+}
+
+function pintar(html) {
+  html = html.replace(/<link rel="stylesheet" href="\/static\/estilos\.css">/, () => `<style>${css}</style>`);
+  const doc = marco.contentDocument;
+  doc.open();
+  doc.write(html);
+  doc.close();
+  const ventana = marco.contentWindow;
+  // form.submit() (por ejemplo el selector de bodega) no dispara el evento submit.
+  ventana.HTMLFormElement.prototype.submit = function () { enviar(this); };
+  doc.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    if (!href.startsWith('/') || a.target === '_blank') return;
+    e.preventDefault();
+    navegar('GET', href);
+  });
+  doc.addEventListener('submit', e => {
+    e.preventDefault();
+    enviar(e.target, e.submitter);
+  });
+}
+
+function enviar(form, boton) {
+  const ventana = marco.contentWindow;
+  const pares = [...new ventana.FormData(form, boton || undefined).entries()];
+  const metodo = (form.getAttribute('method') || 'get').toUpperCase();
+  const accion = form.getAttribute('action') || (metodo === 'GET' ? rutaActual.split('?')[0] : rutaActual);
+  if (metodo === 'GET') {
+    const qs = new URLSearchParams(pares).toString();
+    navegar('GET', accion + (qs ? '?' + qs : ''));
+  } else {
+    navegar('POST', accion, pares);
+  }
+}
+
+$('atras').addEventListener('click', () => {
+  const anterior = historial.pop();
+  if (anterior) navegar('GET', anterior, [], false);
+});
+$('reiniciar').addEventListener('click', () => {
+  if (!confirm('¿Volver a los datos de ejemplo? Se pierden los cambios hechos en la demo.')) return;
+  py.globals.get('reiniciar')();
+  historial.length = 0;
+  navegar('GET', '/login', [], false);
+});
+
+iniciar();
+</script>
+</body>
+</html>

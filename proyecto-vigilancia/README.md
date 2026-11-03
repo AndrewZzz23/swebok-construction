@@ -5,6 +5,7 @@ Prototipo funcional de un software de gestión para una empresa de seguridad ele
 - Requisitos e historias de usuario: [docs/requisitos-e-historias.md](docs/requisitos-e-historias.md)
 - Diagramas UML (PlantUML): carpeta [uml/](uml/), imágenes en [uml/png/](uml/png/)
 - Capturas del prototipo: carpeta [capturas/](capturas/)
+- **Demo en vivo en el navegador** (sin instalar nada): [demo/](demo/). Usa Pyodide para ejecutar este mismo código Flask en el navegador, con la base SQLite en memoria.
 
 ## Cómo ejecutarlo
 
