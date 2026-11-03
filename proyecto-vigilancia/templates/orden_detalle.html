@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block titulo %}OT-{{ '%04d'|format(o.id) }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>OT-{{ '%04d'|format(o.id) }} · {{ o.plantilla }}</h1>
+  <span class="chip estado">{{ o.estado }}</span>
+</div>
+<div class="detalle">
+  <div class="tarjeta">
+    <h3>Datos de la orden</h3>
+    <dl>
+      <dt>Cliente</dt><dd>{{ o.cliente }}</dd>
+      <dt>Cuenta</dt><dd>{{ o.cuenta }} · {{ o.direccion }} (ruta {{ o.ruta }})</dd>
+      <dt>Contacto</dt><dd>{{ o.contacto or '—' }} · {{ o.correo or '—' }}</dd>
+      <dt>Prioridad</dt><dd><span class="chip p{{ o.prioridad }}">{{ PRIORIDADES[o.prioridad] }}</span></dd>
+      <dt>Capacidad requerida</dt><dd>{{ capacidad }}</dd>
+      <dt>Técnico</dt><dd>{{ o.tecnico or 'Sin asignar' }}</dd>
+      <dt>Programada</dt><dd>{{ o.programada_para|fecha }}</dd>
+      <dt>Comentarios</dt><dd>{{ o.comentarios or '—' }}</dd>
+      <dt>Tiempo</dt><dd>{% if real is not none %}<b class="{{ 'rojo' if real > o.tiempo_estimado }}">{{ real }} min reales</b> de {{ o.tiempo_estimado }} estimados (sin contar pausas){% else %}{{ o.tiempo_estimado }} min estimados{% endif %}</dd>
+      {% if o.diagnostico %}<dt>Diagnóstico</dt><dd>{{ o.diagnostico }}</dd><dt>Solución</dt><dd>{{ o.solucion }}</dd>{% endif %}
+    </dl>
+  </div>
+
+  <div class="acciones-orden">
+    {% if usuario.rol in ('admin','director') and o.estado in ('En espera','Asignada') %}
+    <form method="post" action="{{ url_for('orden_asignar', oid=o.id) }}" class="tarjeta">
+      <h3>{{ 'Reasignar' if o.tecnico else 'Asignar' }} técnico</h3>
+      <label>Técnico (primero los que tienen «{{ capacidad }}»)
+        <select name="tecnico_id">{% for t in tecnicos %}<option value="{{ t.id }}" {{ 'selected' if t.id == o.tecnico_id }}>{{ '✔ ' if t.apto else '✖ ' }}{{ t.nombre }}</option>{% endfor %}</select>
+      </label>
+      <label>Fecha y hora <input type="datetime-local" name="programada_para" required value="{{ (o.programada_para or '')[:16]|replace(' ', 'T') }}"></label>
+      <button>Guardar asignación</button>
+    </form>
+    <form method="post" action="{{ url_for('orden_anular', oid=o.id) }}" class="tarjeta">
+      <h3>Anular</h3>
+      <input name="motivo" placeholder="Motivo de la anulación" required>
+      <button class="peligro">Anular orden</button>
+    </form>
+    {% endif %}
+
+    {% if usuario.rol in ('tecnico','admin') %}
+      {% if o.estado == 'Asignada' %}
+      <form method="post" action="{{ url_for('orden_iniciar', oid=o.id) }}" class="tarjeta">
+        <h3>Ejecución</h3><p>Al llegar a la cuenta, inicia la tarea para arrancar el cronómetro.</p>
+        <button>▶ Iniciar tarea</button>
+      </form>
+      {% elif o.estado == 'En ejecución' %}
+      <form method="post" action="{{ url_for('orden_pausar', oid=o.id) }}" class="tarjeta">
+        <h3>Pausar</h3>
+        <select name="motivo">{% for m in MOTIVOS_PAUSA %}<option>{{ m }}</option>{% endfor %}</select>
+        <button class="secundario">⏸ Pausar</button>
+      </form>
+      <form method="post" action="{{ url_for('orden_cerrar', oid=o.id) }}" class="tarjeta">
+        <h3>Cerrar orden</h3>
+        <label>Diagnóstico <textarea name="diagnostico" rows="2" required></textarea></label>
+        <label>Solución <textarea name="solucion" rows="2" required></textarea></label>
+        <button>✔ Finalizar</button>
+      </form>
+      {% elif o.estado == 'Suspendida' %}
+      <form method="post" action="{{ url_for('orden_reanudar', oid=o.id) }}" class="tarjeta">
+        <h3>Orden en pausa</h3><button>▶ Reanudar</button>
+      </form>
+      {% endif %}
+    {% endif %}
+
+    {% if usuario.rol in ('admin','director','almacenista') and o.estado not in ('Finalizada','Anulada') %}
+    <form method="post" action="{{ url_for('orden_material', oid=o.id) }}" class="tarjeta">
+      <h3>Trasladar material a la cuenta</h3>
+      <select name="articulo_id">{% for a in articulos %}<option value="{{ a.id }}">{{ a.nombre }} (disp. {{ a.existencia }})</option>{% endfor %}</select>
+      <input type="number" name="cantidad" min="1" value="1" required>
+      <button class="secundario">Trasladar</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="detalle">
+  <div class="tarjeta">
+    <h3>Línea de tiempo</h3>
+    <ol class="linea">
+      {% for e in eventos %}<li><b>{{ e.tipo }}</b> <small>{{ e.fecha|fecha }} · {{ e.usuario }}</small>{% if e.detalle %}<div>{{ e.detalle }}</div>{% endif %}</li>{% endfor %}
+    </ol>
+  </div>
+  <div class="tarjeta">
+    <h3>Material trasladado</h3>
+    {% if material %}<table>{% for m in material %}<tr><td>{{ m.cantidad }} {{ m.unidad|lower }}</td><td>{{ m.nombre }}</td><td><small>{{ m.tipo }}</small></td></tr>{% endfor %}</table>{% else %}<p class="vacio">Sin material.</p>{% endif %}
+    <h3>Pausas</h3>
+    {% if pausas %}<table>{% for p in pausas %}<tr><td>{{ p.motivo }}</td><td><small>{{ p.inicio|fecha }} → {{ p.fin|fecha }}</small></td></tr>{% endfor %}</table>{% else %}<p class="vacio">Sin pausas.</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

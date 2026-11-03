@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block titulo %}Nueva orden{% endblock %}
+{% block contenido %}
+<h1>Nueva orden de trabajo</h1>
+<form method="post" class="tarjeta formulario">
+  <label>Cliente — Cuenta
+    <select name="cuenta_id" required>{% for c in cuentas %}<option value="{{ c.id }}">{{ c.nombre }}</option>{% endfor %}</select>
+  </label>
+  <label>Plantilla (tipo de servicio)
+    <select name="plantilla_id" required>{% for p in plantillas %}<option value="{{ p.id }}">{{ p.nombre }}</option>{% endfor %}</select>
+  </label>
+  <label>Comentarios <textarea name="comentarios" rows="3" placeholder="¿Qué reporta el cliente?"></textarea></label>
+  <p class="ayuda">Si ya hay una orden pendiente para la misma cuenta y plantilla, no se crea otra: se agrega la nota a la existente y sube su prioridad.</p>
+  <div class="botones"><button>Crear orden</button><a href="{{ url_for('tablero') }}">Cancelar</a></div>
+</form>
+{% endblock %}

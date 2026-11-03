@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block titulo %}Órdenes{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>{{ 'Mis órdenes' if usuario.rol == 'tecnico' else 'Tablero de órdenes' }}</h1>
+  {% if usuario.rol in ('admin','director') %}<a class="boton" href="{{ url_for('orden_nueva') }}">+ Nueva orden</a>{% endif %}
+</div>
+{% if usuario.rol != 'tecnico' %}
+<form class="filtros">
+  <select name="estado"><option value="">Todos los estados</option>{% for e in ESTADOS %}<option {{ 'selected' if request.args.estado == e }}>{{ e }}</option>{% endfor %}</select>
+  <select name="tecnico"><option value="">Todos los técnicos</option>{% for t in tecnicos %}<option value="{{ t.id }}" {{ 'selected' if request.args.tecnico == t.id|string }}>{{ t.nombre }}</option>{% endfor %}</select>
+  <select name="cliente"><option value="">Todos los clientes</option>{% for c in clientes %}<option value="{{ c.id }}" {{ 'selected' if request.args.cliente == c.id|string }}>{{ c.nombre }}</option>{% endfor %}</select>
+  <button>Filtrar</button> <a href="{{ url_for('tablero') }}">Limpiar</a>
+</form>
+{% endif %}
+<div class="kanban">
+{% for estado in ESTADOS %}
+  <section class="columna">
+    <h3>{{ estado }} <span>{{ por_estado[estado]|length }}</span></h3>
+    {% for o in por_estado[estado] %}
+      {% set real = tiempos[o.id] %}
+      <a class="orden p{{ o.prioridad }} {{ 'alerta' if real is not none and o.estado != 'Finalizada' and real > o.tiempo_estimado }}" href="{{ url_for('orden_detalle', oid=o.id) }}">
+        <div class="fila"><b>OT-{{ '%04d'|format(o.id) }}</b><span class="chip p{{ o.prioridad }}">{{ PRIORIDADES[o.prioridad] }}</span></div>
+        <div>{{ o.plantilla }}</div>
+        <small>{{ o.cliente }} · {{ o.cuenta }}</small>
+        {% if o.tecnico %}<small>👷 {{ o.tecnico }}{% if o.programada_para and o.estado == 'Asignada' %} · {{ o.programada_para|fecha }}{% endif %}</small>{% endif %}
+        {% if real is not none %}
+          <small class="tiempo">⏱ {{ real }} / {{ o.tiempo_estimado }} min
+          {% if o.estado != 'Finalizada' and real > o.tiempo_estimado %}<b>· Tiempo superado</b>{% endif %}</small>
+        {% endif %}
+      </a>
+    {% else %}<p class="vacio">Sin órdenes</p>{% endfor %}
+  </section>
+{% endfor %}
+</div>
+{% endblock %}

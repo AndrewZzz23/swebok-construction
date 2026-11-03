@@ -1,0 +1,25 @@
+@startuml despliegue
+!include estilo.iuml
+title SIGEV · Diagrama de despliegue
+
+node "PC de oficina" as PC <<device>> {
+  artifact "Navegador web\n(Chrome / Firefox / Edge)" as N1
+}
+node "Celular del técnico" as Cel <<device>> {
+  artifact "Navegador móvil" as N2
+}
+node "Servidor de aplicaciones\n(Linux o Windows)" as Srv <<device>> {
+  node "Python 3.11" <<execution environment>> {
+    node "Servidor WSGI\n(Waitress / Gunicorn)" <<execution environment>> {
+      artifact "app.py + db.py\n(Flask)" as App
+      artifact "templates/ + static/" as Tpl
+    }
+  }
+  database "sigev.db\n(SQLite)" as BD
+}
+
+PC -- Srv : HTTP/HTTPS\n(red local o internet)
+Cel -- Srv : HTTPS\n(datos móviles)
+App -- BD : sqlite3
+App ..> Tpl
+@enduml

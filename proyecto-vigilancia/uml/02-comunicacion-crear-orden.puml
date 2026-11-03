@@ -1,0 +1,20 @@
+@startuml comunicacion-crear-orden
+!include estilo.iuml
+title SIGEV · Diagrama de comunicación: Crear orden de trabajo (con control de duplicados)
+left to right direction
+
+actor ":Director técnico" as D
+rectangle "<u>:FormularioOrden</u>" as F
+rectangle "<u>:ControladorOrdenes</u>" as C
+rectangle "<u>:Orden</u>" as O
+rectangle "<u>:Plantilla</u>" as P
+rectangle "<u>:EventoOrden</u>" as E
+rectangle "<u>:Auditoria</u>" as A
+
+D -- F : "1: diligenciar(cuenta, plantilla, comentarios) →"
+F -- C : "2: crearOrden(datos) →"
+C -- O : "3: buscarPendiente(cuenta, plantilla) →\n[existe] 3.1: subirPrioridad() →\n[no existe] 5: crear(cuenta, plantilla, prioridad) →"
+C -- P : "4: [no existe] obtenerPrioridad() →"
+C -- E : "3.2 / 6: registrar(tipo, detalle) →"
+C -- A : "3.3 / 7: registrar(usuario, acción) →"
+@enduml

@@ -1,0 +1,60 @@
+@startuml casos-de-uso
+!include estilo.iuml
+title SIGEV · Diagrama de casos de uso
+left to right direction
+
+actor "Administrador" as Admin
+actor "Director técnico" as Director
+actor "Técnico" as Tecnico
+actor "Almacenista" as Almacen
+actor "Usuario" as Usuario
+Admin -|> Usuario
+Director -|> Usuario
+Tecnico -|> Usuario
+Almacen -|> Usuario
+
+rectangle "SIGEV - Sistema de Gestión de Servicios de Vigilancia" {
+  usecase "CU01 Iniciar sesión" as CU01
+  usecase "CU02 Gestionar clientes\ny cuentas" as CU02
+  usecase "CU03 Gestionar técnicos\ny capacidades" as CU03
+  usecase "CU04 Gestionar plantillas\nde servicio" as CU04
+  usecase "CU05 Crear orden\nde trabajo" as CU05
+  usecase "Verificar duplicados" as CUD
+  usecase "CU06 Asignar orden\na técnico" as CU06
+  usecase "Sugerir técnicos\npor capacidad" as CUS
+  usecase "CU07 Consultar tablero\nde órdenes" as CU07
+  usecase "CU08 Ejecutar orden" as CU08
+  usecase "Pausar / reanudar" as CUP
+  usecase "CU09 Cerrar orden" as CU09
+  usecase "CU10 Gestionar artículos\ne inventario" as CU10
+  usecase "CU11 Trasladar material\na la cuenta" as CU11
+  usecase "CU12 Consultar auditoría" as CU12
+  usecase "CU13 Generar informe\nde tiempos" as CU13
+  usecase "Registrar auditoría" as CUA
+}
+
+Usuario --> CU01
+Admin --> CU02
+Admin --> CU03
+Admin --> CU12
+Director --> CU02
+Director --> CU03
+Director --> CU04
+Director --> CU05
+Director --> CU06
+Director --> CU07
+Director --> CU13
+Director --> CU11
+Tecnico --> CU07
+Tecnico --> CU08
+Tecnico --> CU09
+Almacen --> CU10
+Almacen --> CU11
+
+CU05 ..> CUD : <<include>>
+CU06 ..> CUS : <<include>>
+CUP ..> CU08 : <<extend>>
+CU05 ..> CUA : <<include>>
+CU09 ..> CUA : <<include>>
+CU11 ..> CUA : <<include>>
+@enduml

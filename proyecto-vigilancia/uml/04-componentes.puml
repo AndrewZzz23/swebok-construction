@@ -1,0 +1,47 @@
+@startuml componentes
+!include estilo.iuml
+title SIGEV · Diagrama de componentes
+
+package "Cliente" {
+  [Navegador web] as Nav
+}
+
+package "Aplicación SIGEV (Python + Flask)" {
+  component "Vistas\n(plantillas Jinja2 + CSS)" as Vistas
+  component "Módulo de sesión\ny roles" as Sesion
+  component "Módulo de catálogos\n(clientes, cuentas, técnicos,\nplantillas, artículos)" as Catalogos
+  component "Módulo de órdenes\n(crear, asignar, ejecutar)" as Ordenes
+  component "Módulo de inventario\n(entradas, traslados, kardex)" as Inventario
+  component "Módulo de informes" as Informes
+  component "Servicio de auditoría" as Auditoria
+  component "Acceso a datos\n(db.py · sqlite3)" as Datos
+  interface "HTTP" as HTTP
+  interface "IAuditoria" as IA
+  interface "IDatos" as ID
+}
+
+database "sigev.db\n(SQLite)" as BD
+
+Nav --> HTTP
+HTTP - Sesion
+Sesion --> Catalogos
+Sesion --> Ordenes
+Sesion --> Inventario
+Sesion --> Informes
+Catalogos ..> Vistas
+Ordenes ..> Vistas
+Inventario ..> Vistas
+Informes ..> Vistas
+Ordenes --> Inventario : traslado de material
+Catalogos --> IA
+Ordenes --> IA
+Inventario --> IA
+IA - Auditoria
+Catalogos --> ID
+Ordenes --> ID
+Inventario --> ID
+Informes --> ID
+Auditoria --> ID
+ID - Datos
+Datos --> BD
+@enduml
